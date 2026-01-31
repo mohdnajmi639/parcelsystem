@@ -15,11 +15,11 @@ const ManageUsers = () => {
     const [message, setMessage] = useState({ type: '', text: '' });
 
     const [formData, setFormData] = useState({
-        name: '',
+        fullName: '',
         email: '',
         studentId: '',
-        phone: '',
-        room: '',
+        phoneNumber: '',
+        password: '',
         role: 'student'
     });
 
@@ -40,22 +40,22 @@ const ManageUsers = () => {
 
     const resetForm = () => {
         setFormData({
-            name: '',
+            fullName: '',
             email: '',
             studentId: '',
-            phone: '',
-            room: '',
+            phoneNumber: '',
+            password: '',
             role: 'student'
         });
     };
 
     const openEditModal = (user) => {
         setFormData({
-            name: user.name || '',
+            fullName: user.fullName || '',
             email: user.email || '',
             studentId: user.studentId || '',
-            phone: user.phone || '',
-            room: user.room || '',
+            phoneNumber: user.phoneNumber || '',
+            password: '', // Leave empty for edit
             role: user.role || 'student'
         });
         setEditModal({ open: true, user });
@@ -109,7 +109,7 @@ const ManageUsers = () => {
 
     const filteredUsers = users.filter(user => {
         const matchesSearch =
-            user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.studentId?.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -148,11 +148,11 @@ const ManageUsers = () => {
         <form onSubmit={onSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Name *</label>
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
                     <input
                         type="text"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        value={formData.fullName}
+                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                         required
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
@@ -181,11 +181,11 @@ const ManageUsers = () => {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone</label>
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
                     <input
                         type="text"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        value={formData.phoneNumber}
+                        onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
                         placeholder="e.g., 012-3456789"
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
@@ -194,12 +194,13 @@ const ManageUsers = () => {
 
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Room/Unit</label>
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password {submitText === 'Save Changes' ? '(Leave blank to keep)' : '*'}</label>
                     <input
-                        type="text"
-                        value={formData.room}
-                        onChange={(e) => setFormData({ ...formData, room: e.target.value })}
-                        placeholder="e.g., A-101"
+                        type="password"
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        required={submitText !== 'Save Changes'}
+                        placeholder={submitText === 'Save Changes' ? '********' : 'Enter password'}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
                 </div>
@@ -309,10 +310,11 @@ const ManageUsers = () => {
                     <table className="w-full">
                         <thead className="bg-gray-50 dark:bg-gray-700/50">
                             <tr>
-                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Full Name</th>
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Student ID</th>
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Phone</th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Joined</th>
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                             </tr>
@@ -324,14 +326,19 @@ const ManageUsers = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center space-x-3">
                                                 <div className="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                                    {user.name?.charAt(0).toUpperCase() || '?'}
+                                                    {user.fullName?.charAt(0).toUpperCase() || '?'}
                                                 </div>
-                                                <span className="font-medium text-gray-900 dark:text-white">{user.name}</span>
+                                                <span className="font-medium text-gray-900 dark:text-white">{user.fullName}</span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-gray-600 dark:text-gray-300 font-mono">{user.studentId || '-'}</td>
                                         <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{user.email}</td>
-                                        <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{user.phone || '-'}</td>
+                                        <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{user.phoneNumber || '-'}</td>
+                                        <td className="px-6 py-4">
+                                            <span className={`px-2 py-1 rounded-full text-xs font-semibold capitalize ${getRoleBadge(user.role)}`}>
+                                                {user.role}
+                                            </span>
+                                        </td>
                                         <td className="px-6 py-4 text-gray-500 dark:text-gray-400 text-sm">{formatDate(user.createdAt)}</td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center space-x-1">
@@ -442,10 +449,10 @@ const ManageUsers = () => {
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center space-x-3">
                                 <div className="w-12 h-12 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                                    {viewModal.user?.name?.charAt(0).toUpperCase() || '?'}
+                                    {viewModal.user?.fullName?.charAt(0).toUpperCase() || '?'}
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">{viewModal.user?.name}</h3>
+                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">{viewModal.user?.fullName}</h3>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">{viewModal.user?.email}</p>
                                 </div>
                             </div>
@@ -463,13 +470,13 @@ const ManageUsers = () => {
                                 </div>
                                 <div>
                                     <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Phone</label>
-                                    <p className="text-gray-900 dark:text-white mt-1">{viewModal.user?.phone || '-'}</p>
+                                    <p className="text-gray-900 dark:text-white mt-1">{viewModal.user?.phoneNumber || '-'}</p>
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Room/Unit</label>
-                                    <p className="text-gray-900 dark:text-white mt-1">{viewModal.user?.room || '-'}</p>
+                                    <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Status</label>
+                                    <p className="text-gray-900 dark:text-white mt-1 capitalize">{viewModal.user?.status || 'Active'}</p>
                                 </div>
                                 <div>
                                     <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Role</label>
@@ -510,7 +517,7 @@ const ManageUsers = () => {
                             </div>
                         </div>
                         <p className="text-gray-600 dark:text-gray-300 mb-6">
-                            Are you sure you want to delete <span className="font-semibold">{deleteModal.user?.name}</span>?
+                            Are you sure you want to delete <span className="font-semibold">{deleteModal.user?.fullName}</span>?
                         </p>
                         <div className="flex space-x-3">
                             <button onClick={() => setDeleteModal({ open: false, user: null })} className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">

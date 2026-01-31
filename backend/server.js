@@ -105,6 +105,7 @@ async function start() {
                     email,
                     phoneNumber,
                     password: hashedPassword,
+                    role: 'student',
                     createdAt: joinDate
                 };
 
@@ -154,7 +155,8 @@ async function start() {
                         studentId: user.studentId,
                         fullName: user.fullName,
                         email: user.email,
-                        phoneNumber: user.phoneNumber
+                        phoneNumber: user.phoneNumber,
+                        role: user.role
                     }
                 });
 
@@ -491,20 +493,42 @@ async function start() {
             }
         });
 
-        // Create a new user
+        // Create a new user (Admin)
         app.post('/api/users', async (req, res) => {
             try {
+                const { studentId, fullName, email, phoneNumber, password, role } = req.body;
+
+                // Basic validation
+                if (!studentId || !fullName || !password) {
+                    return res.status(400).json({ error: "Student ID, Name, and Password are required." });
+                }
+
+                // Check uniqueness
+                const existingUser = await users.findOne({ $or: [{ studentId }, { email }] });
+                if (existingUser) {
+                    return res.status(400).json({ error: "Student ID or Email already exists." });
+                }
+
+                // Hash password
+                const salt = await bcrypt.genSalt(12);
+                const hashedPassword = await bcrypt.hash(password, salt);
+
                 const newUser = {
-                    ...req.body,
-                    role: req.body.role || 'student',
-                    status: req.body.status || 'active',
+                    studentId,
+                    fullName,
+                    email,
+                    phoneNumber,
+                    password: hashedPassword,
+                    role: role || 'student',
+                    status: 'active',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 };
                 const result = await users.insertOne(newUser);
                 res.status(201).json(result);
             } catch (err) {
-                res.status(400).json({ error: "Failed to create user" });
+                console.error("Create User Error:", err);
+                res.status(500).json({ error: "Failed to create user" });
             }
         });
 
@@ -512,20 +536,31 @@ async function start() {
         app.put('/api/users/:id', async (req, res) => {
             try {
                 const { id } = req.params;
+                const { password, ...otherData } = req.body;
+
                 const updateData = {
-                    ...req.body,
+                    ...otherData,
                     updatedAt: new Date()
                 };
+
+                // Only hash password if it's provided and non-empty
+                if (password && password.trim() !== '') {
+                    const salt = await bcrypt.genSalt(12);
+                    updateData.password = await bcrypt.hash(password, salt);
+                }
+
                 const result = await users.updateOne(
                     { _id: new ObjectId(id) },
                     { $set: updateData }
                 );
+
                 if (result.matchedCount === 0) {
                     return res.status(404).json({ error: "User not found" });
                 }
                 res.json({ message: "User updated successfully", result });
             } catch (err) {
-                res.status(400).json({ error: "Failed to update user" });
+                console.error("Update User Error:", err);
+                res.status(500).json({ error: "Failed to update user" });
             }
         });
 

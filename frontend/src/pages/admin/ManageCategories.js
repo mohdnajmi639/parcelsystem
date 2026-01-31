@@ -160,7 +160,6 @@ const ManageCategories = () => {
                             <thead className="bg-gray-50 dark:bg-gray-700/50">
                                 <tr>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Color</th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created At</th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                                 </tr>
@@ -174,7 +173,6 @@ const ManageCategories = () => {
                                                     {category.name}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-gray-600 dark:text-gray-300 capitalize">{category.color}</td>
                                             <td className="px-6 py-4 text-gray-500 dark:text-gray-400 text-sm">{formatDate(category.createdAt)}</td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center space-x-2">
