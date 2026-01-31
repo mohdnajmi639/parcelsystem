@@ -129,6 +129,9 @@ const Navbar = () => {
                                         <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                                     </svg>
                                     <span className="font-medium">Hi, {user.fullName?.split(' ')[0] || 'Member'}</span>
+                                    <svg className={`w-4 h-4 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
                                 </button>
 
                                 {/* Dropdown Menu */}
@@ -146,7 +149,7 @@ const Navbar = () => {
                                         </Link>
                                         {user.role === 'admin' && (
                                             <Link
-                                                to="/admin/dashboard"
+                                                to="/admin"
                                                 onClick={() => setIsUserMenuOpen(false)}
                                                 className="flex items-center space-x-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                                             >
@@ -224,7 +227,7 @@ const Navbar = () => {
                                         </div>
                                         <Link to="/dashboard" className="btn-secondary text-center" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
                                         {user.role === 'admin' && (
-                                            <Link to="/admin/dashboard" className="btn-secondary text-center" onClick={() => setIsMenuOpen(false)}>Admin Panel</Link>
+                                            <Link to="/admin" className="btn-secondary text-center" onClick={() => setIsMenuOpen(false)}>Admin Panel</Link>
                                         )}
                                         <button onClick={handleLogout} className="btn-primary text-center">Logout</button>
                                     </>

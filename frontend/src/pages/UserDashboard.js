@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const UserDashboard = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [historyLoading, setHistoryLoading] = useState(false);
+    const [parcelHistory, setParcelHistory] = useState([]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -15,8 +18,28 @@ const UserDashboard = () => {
             return;
         }
 
-        setUser(JSON.parse(storedUser));
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
         setLoading(false);
+
+        const userId = userData.id || userData._id;
+        if (!userId) {
+            console.error("User ID not found in storage");
+            return;
+        }
+
+        // Fetch parcel history using the dedicated, secure endpoint
+        setHistoryLoading(true);
+        axios.get(`http://localhost:5000/api/users/${userId}/parcels`)
+            .then(res => {
+                setParcelHistory(res.data);
+            })
+            .catch(err => {
+                console.error("Failed to fetch history", err);
+            })
+            .finally(() => {
+                setHistoryLoading(false);
+            });
     }, [navigate]);
 
     const handleLogout = () => {
@@ -95,7 +118,7 @@ const UserDashboard = () => {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Total Parcels</p>
-                                <p className="text-lg font-semibold text-gray-900 dark:text-white">0</p>
+                                <p className="text-lg font-semibold text-gray-900 dark:text-white">{parcelHistory.length}</p>
                             </div>
                         </div>
                     </div>
@@ -141,16 +164,63 @@ const UserDashboard = () => {
                 </div>
 
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Recent Parcels</h2>
-                    <div className="text-center py-12">
-                        <div className="mx-auto w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
-                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                            </svg>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Recent Parcel History</h2>
+
+                    {historyLoading ? (
+                        <div className="text-center py-12">
+                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600 mx-auto"></div>
                         </div>
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No parcels yet</h3>
-                        <p className="text-gray-500 dark:text-gray-400">Track your first parcel to see it here</p>
-                    </div>
+                    ) : parcelHistory.length > 0 ? (
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead className="bg-gray-50 dark:bg-gray-700/50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tracking Number</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Courier</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    {parcelHistory.map((parcel) => (
+                                        <tr key={parcel._id}>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                                {parcel.trackingNumber}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                {parcel.courier}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                {parcel.shelfLocation || '-'}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${parcel.status === 'Collected' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                                                    parcel.status === 'Received' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
+                                                        'bg-gray-100 text-gray-800'
+                                                    }`}>
+                                                    {parcel.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                {new Date(parcel.updatedAt || parcel.createdAt).toLocaleDateString()}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <div className="text-center py-12">
+                            <div className="mx-auto w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No parcels found</h3>
+                            <p className="text-gray-500 dark:text-gray-400">Parcels you claim will appear here.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

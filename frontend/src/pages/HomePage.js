@@ -1,8 +1,10 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import HeroGraphics from '../components/HeroGraphics';
 
 const HomePage = () => {
+    const navigate = useNavigate();
     // Partner logos (using placeholder icons/text)
     const partners = [
         { name: 'J&T Express', icon: '📦' },
@@ -11,8 +13,142 @@ const HomePage = () => {
         { name: 'FedEx', icon: '📮' },
     ];
 
+    // UI States
+    const [loginModalOpen, setLoginModalOpen] = useState(false);
+
+    const [trackingNumber, setTrackingNumber] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [trackingResult, setTrackingResult] = useState(null);
+    const [paymentStatus, setPaymentStatus] = useState('idle'); // idle, processing, success
+    const [paymentMethod, setPaymentMethod] = useState(''); // 'banking', 'counter'
+    const [selectedBank, setSelectedBank] = useState('');
+
+    const banks = [
+        { name: 'Maybank', color: 'bg-yellow-400 text-black' },
+        { name: 'CIMB Clicks', color: 'bg-red-600 text-white' },
+        { name: 'Bank Islam', color: 'bg-red-800 text-white' },
+        { name: 'RHB Online', color: 'bg-blue-600 text-white' },
+        { name: 'Public Bank', color: 'bg-red-500 text-white' },
+        { name: 'AmBank', color: 'bg-red-600 text-white' }
+    ];
+
+    const handlePayment = (method, bank = '') => {
+        setPaymentMethod(method);
+        setSelectedBank(bank);
+        setPaymentStatus('processing');
+
+        // Simulate payment processing then update DB
+        setTimeout(async () => {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                const userId = user ? (user.id || user._id) : null;
+
+                if (!userId) {
+                    alert("Session invalid. Please login again.");
+                    setPaymentStatus('idle');
+                    return;
+                }
+
+                await axios.put(`http://localhost:5000/api/parcels/${trackingResult._id}`, {
+                    status: 'Collected',
+                    collectedBy: userId // Link parcel to user
+                });
+
+                setPaymentStatus('success');
+                // Update local status so UI reflects change immediately if they close/reopen
+                setTrackingResult(prev => ({ ...prev, status: 'Collected' }));
+            } catch (error) {
+                console.error("Payment update failed", error);
+                setPaymentStatus('idle');
+                alert("Payment processed but failed to update system. Please contact admin.");
+            }
+        }, 1500);
+    };
+
+    const resetTracking = () => {
+        setTrackingResult(null);
+        setPaymentStatus('idle');
+        setPaymentMethod('');
+        setSelectedBank('');
+    };
+
+    const handleTrack = async (e) => {
+        e.preventDefault();
+        if (!trackingNumber.trim()) {
+            setError('Please enter a tracking number');
+            return;
+        }
+
+        // Check if user is logged in
+        const user = localStorage.getItem('user');
+        if (!user) {
+            setLoginModalOpen(true);
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+        setTrackingResult(null);
+        setPaymentStatus('idle'); // Reset payment on new track
+
+        try {
+            const response = await axios.get(`http://localhost:5000/api/parcels/track/${trackingNumber}`);
+            setTrackingResult(response.data);
+        } catch (err) {
+            setError(err.response?.data?.error || 'Parcel not found or validation failed.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const StatusBadge = ({ status }) => {
+        const colors = {
+            'Received': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+            'Collected': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+            'Overdue': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+        };
+        return (
+            <span className={`px-4 py-1.5 rounded-full text-sm font-semibold ${colors[status] || 'bg-gray-100 text-gray-800'}`}>
+                {status}
+            </span>
+        );
+    };
+
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+            {/* Login Required Modal */}
+            {loginModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm p-6 transform transition-all scale-100">
+                        <div className="text-center mb-6">
+                            <div className="mx-auto w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mb-4">
+                                <svg className="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Login Required</h3>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">
+                                You need to be logged in to track parcels and view your history.
+                            </p>
+                        </div>
+                        <div className="flex space-x-3">
+                            <button
+                                onClick={() => setLoginModalOpen(false)}
+                                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => navigate('/login')}
+                                className="flex-1 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium shadow-lg shadow-primary-500/30 transition-all transform hover:scale-105"
+                            >
+                                Login Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
                 {/* Background Gradient */}
@@ -33,9 +169,8 @@ const HomePage = () => {
                                 Built for residents and administrators to streamline parcel management.
                             </p>
 
-                            {/* Tracking Input Section */}
                             <div className="w-full max-w-lg mb-12">
-                                <form className="flex items-center p-2 bg-white dark:bg-gray-800 rounded-full shadow-2xl border border-gray-100 dark:border-gray-700 relative z-20 transition-all hover:shadow-3xl focus-within:ring-4 focus-within:ring-primary-100 dark:focus-within:ring-primary-900/30">
+                                <form onSubmit={handleTrack} className="flex items-center p-2 bg-white dark:bg-gray-800 rounded-full shadow-2xl border border-gray-100 dark:border-gray-700 relative z-20 transition-all hover:shadow-3xl focus-within:ring-4 focus-within:ring-primary-100 dark:focus-within:ring-primary-900/30">
                                     <div className="flex-1 relative">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                             <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,21 +179,28 @@ const HomePage = () => {
                                         </div>
                                         <input
                                             type="text"
+                                            value={trackingNumber}
+                                            onChange={(e) => setTrackingNumber(e.target.value)}
                                             className="w-full pl-12 pr-4 py-3 bg-transparent border-none focus:ring-0 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-lg outline-none"
                                             placeholder="Enter Tracking Number"
                                         />
                                     </div>
                                     <button
                                         type="submit"
-                                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full transition duration-200 shadow-md whitespace-nowrap"
+                                        disabled={loading}
+                                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full transition duration-200 shadow-md whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
                                     >
-                                        Track Parcel
+                                        {loading ? 'Searching...' : 'Track Parcel'}
                                     </button>
                                 </form>
-                                <div className="mt-4 flex items-center justify-between pl-4 pr-2 text-sm">
-                                    <p className="text-gray-500 dark:text-gray-400">
-                                        Note: Please copy and paste the tracking number or enter the full number above.
-                                    </p>
+                                <div className="mt-4 flex flex-col pl-4 pr-2">
+                                    {error ? (
+                                        <p className="text-red-500 font-medium animate-pulse">{error}</p>
+                                    ) : (
+                                        <p className="text-gray-500 dark:text-gray-400 text-sm">
+                                            Note: Please copy and paste the tracking number or enter the full number above.
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
@@ -227,7 +369,187 @@ const HomePage = () => {
                     </div>
                 </div>
             </footer>
-        </div>
+
+            {/* Tracking Result Modal */}
+            {
+                trackingResult && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+                        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100">
+                            {/* Header */}
+                            <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-6 text-white relative">
+                                <button
+                                    onClick={resetTracking}
+                                    className="absolute top-4 right-4 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-1 transition-colors"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                                <div className="flex items-center space-x-3 mb-2">
+                                    <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-xl font-bold">Parcel Found!</h3>
+                                </div>
+                                <p className="text-primary-100 text-sm font-mono opacity-90 tracking-wider">
+                                    #{trackingResult.trackingNumber}
+                                </p>
+                            </div>
+
+                            {/* Content */}
+                            <div className="p-6 space-y-6">
+                                <div className="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-700">
+                                    <span className="text-gray-500 dark:text-gray-400 font-medium">Status</span>
+                                    <StatusBadge status={trackingResult.status} />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Owner</h4>
+                                        <p className="font-semibold text-gray-900 dark:text-white text-lg">
+                                            {trackingResult.studentName}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Courier</h4>
+                                        <p className="font-semibold text-gray-900 dark:text-white text-lg">
+                                            {trackingResult.courier}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Shelf Location Highlight */}
+                                <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800 rounded-xl p-4 flex items-center justify-between">
+                                    <div>
+                                        <h4 className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-1">PICKUP LOCATION / SHELF</h4>
+                                        <div className="flex items-center space-x-2 text-primary-800 dark:text-primary-200">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                            <span className="font-bold text-lg">{trackingResult.shelfLocation || 'Consult Admin'}</span>
+                                        </div>
+                                    </div>
+                                    <div className="h-10 w-10 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-700 dark:text-white font-bold">
+                                        {trackingResult.shelfLocation ? trackingResult.shelfLocation.charAt(0) : '?'}
+                                    </div>
+                                </div>
+
+                                <div className="pt-2 text-center text-sm text-gray-500 dark:text-gray-400">
+                                    Arrived on: {new Date(trackingResult.createdAt).toLocaleDateString()}
+                                </div>
+
+                                {/* Payment Section */}
+                                <div className="border-t border-gray-100 dark:border-gray-700 pt-6">
+                                    {trackingResult.status === 'Collected' && paymentStatus !== 'success' ? (
+                                        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 text-center border border-gray-100 dark:border-gray-600">
+                                            <div className="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                                <svg className="w-6 h-6 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </div>
+                                            <h4 className="text-lg font-bold text-gray-900 dark:text-white">Parcel Collected</h4>
+                                            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                                                This parcel has already been paid for and collected.
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Make Payment</h3>
+
+                                            {/* Success State */}
+                                            {paymentStatus === 'success' ? (
+                                                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-6 text-center animate-fade-in-up">
+                                                    <div className="w-16 h-16 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                        <svg className="w-8 h-8 text-green-600 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </div>
+                                                    <h3 className="text-xl font-bold text-green-700 dark:text-green-300 mb-2">Payment Successful!</h3>
+                                                    <p className="text-green-600 dark:text-green-400 mb-4">
+                                                        Parcel collected successfully. It has been recorded in your dashboard history.
+                                                    </p>
+                                                    <p className="text-green-700 dark:text-green-400">
+                                                        {paymentMethod === 'banking' ? `Paid via ${selectedBank}` : 'Pay at Counter option selected'}
+                                                    </p>
+                                                    <div className="mt-4 p-3 bg-white dark:bg-gray-800 rounded-lg border border-green-100 dark:border-green-900/50">
+                                                        <p className="text-sm font-mono text-gray-500 dark:text-gray-400">Transaction ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                                                    </div>
+                                                    <p className="text-xs text-green-600 dark:text-green-500 mt-4">Status updated to 'Collected'</p>
+                                                </div>
+                                            ) : (
+                                                <div className="space-y-4">
+                                                    {/* Payment Method Selection */}
+                                                    {paymentStatus === 'processing' ? (
+                                                        <div className="flex flex-col items-center justify-center py-8 space-y-4">
+                                                            <svg className="animate-spin h-10 w-10 text-primary-600" fill="none" viewBox="0 0 24 24">
+                                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                            </svg>
+                                                            <p className="text-gray-600 dark:text-gray-300 animate-pulse">Processing Payment...</p>
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            {/* Option 1: Internet Banking */}
+                                                            <div>
+                                                                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Option 1: Internet Banking</p>
+                                                                <div className="grid grid-cols-2 gap-2">
+                                                                    {banks.map((bank) => (
+                                                                        <button
+                                                                            key={bank.name}
+                                                                            onClick={() => handlePayment('banking', bank.name)}
+                                                                            className={`${bank.color} hover:opacity-90 py-2 px-3 rounded-lg text-sm font-semibold transition-transform active:scale-95`}
+                                                                        >
+                                                                            {bank.name}
+                                                                        </button>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="relative flex py-2 items-center">
+                                                                <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+                                                                <span className="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase">Or</span>
+                                                                <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+                                                            </div>
+
+                                                            {/* Option 2: Pay at Counter */}
+                                                            <div>
+                                                                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Option 2: Cash</p>
+                                                                <button
+                                                                    onClick={() => handlePayment('counter')}
+                                                                    className="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 transition-colors border-2 border-dashed border-gray-300 dark:border-gray-600"
+                                                                >
+                                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                                    </svg>
+                                                                    <span>Pay at Counter</span>
+                                                                </button>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Footer */}
+                            <div className="p-4 bg-gray-50 dark:bg-gray-700/50 flex justify-center">
+                                <button
+                                    onClick={resetTracking}
+                                    className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium text-sm transition-colors"
+                                >
+                                    Close Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+        </div >
     );
 };
 
