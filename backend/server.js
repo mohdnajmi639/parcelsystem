@@ -241,10 +241,12 @@ async function start() {
 
         // ==================== PARCEL ROUTES ====================
 
-        // Fetch all parcels from Atlas
+        // Fetch all parcels from Atlas (ADMIN ONLY - Returns ALL parcels)
         app.get('/api/parcels', async (req, res) => {
             try {
-                const result = await parcels.find({}).sort({ createdAt: -1 }).toArray();
+                // In a real app, we should check for Admin Token here
+                // For now, we assume this endpoint is only used by Admin Panel
+                const result = await parcels.find({}).sort({ updatedAt: -1, createdAt: -1 }).toArray();
                 res.json(result);
             } catch (err) {
                 res.status(500).json({ error: "Failed to fetch parcels" });
@@ -279,6 +281,7 @@ async function start() {
                     { _id: new ObjectId(id) },
                     { $set: updateData }
                 );
+                console.log(`[PUT Parcel] ID: ${id}, Body:`, req.body, "Update:", updateData);
                 if (result.matchedCount === 0) {
                     return res.status(404).json({ error: "Parcel not found" });
                 }
@@ -354,6 +357,59 @@ async function start() {
                 res.status(500).json({ error: "Failed to fetch recent parcels" });
             }
         });
+
+        // Track parcel by tracking number
+        app.get('/api/parcels/track/:trackingNumber', async (req, res) => {
+            try {
+                const { trackingNumber } = req.params;
+
+                // Case-insensitive search
+                const parcel = await parcels.findOne({
+                    trackingNumber: { $regex: new RegExp(`^${trackingNumber}$`, 'i') }
+                });
+
+                if (!parcel) {
+                    return res.status(404).json({ error: "Parcel not found. Please check your tracking number." });
+                }
+
+                res.json(parcel);
+            } catch (err) {
+                res.status(500).json({ error: "Failed to track parcel" });
+            }
+        });
+
+        // Get parcels collected by a specific user (USER HISTORY ONLY)
+        app.get('/api/users/:userId/parcels', async (req, res) => {
+            try {
+                const { userId } = req.params;
+                if (!userId || userId === 'undefined' || userId === 'null') {
+                    return res.json([]); // Return empty if invalid ID
+                }
+
+                console.log(`[GET History] Fetching for UserID: ${userId}`);
+
+                // Robust Query: Find matches whether stored as String OR ObjectId
+                const query = {
+                    $or: [
+                        { collectedBy: userId },
+                        { collectedBy: new ObjectId(userId) } // Try object ID too
+                    ]
+                };
+
+                const result = await parcels.find(query)
+                    .sort({ updatedAt: -1 })
+                    .toArray();
+
+                console.log(`[GET History] Found ${result.length} parcels`);
+                res.json(result);
+            } catch (err) {
+                console.error("Error fetching user history:", err);
+                res.status(500).json({ error: "Failed to fetch parcel history" });
+            }
+        });
+
+
+
 
         // Migration: Add timestamps to existing parcels that don't have them
         app.post('/api/migrate/timestamps', async (req, res) => {

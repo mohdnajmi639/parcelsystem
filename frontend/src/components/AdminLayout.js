@@ -135,7 +135,7 @@ const AdminLayout = () => {
             <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col`}>
                 {/* Logo */}
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center space-x-3">
+                    <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
                         <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center flex-shrink-0">
                             <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4z" />
@@ -147,7 +147,7 @@ const AdminLayout = () => {
                                 <p className="text-xs text-gray-500 dark:text-gray-400">Admin Panel</p>
                             </div>
                         )}
-                    </div>
+                    </Link>
                 </div>
 
                 {/* Navigation */}
@@ -216,15 +216,13 @@ const AdminLayout = () => {
                         <div className="relative" ref={userMenuRef}>
                             <button
                                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                                className="flex items-center space-x-3 focus:outline-none"
+                                className="flex items-center space-x-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors"
                             >
-                                <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold">
-                                    {user?.fullName?.charAt(0) || 'A'}
-                                </div>
-                                <span className="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    {user?.fullName?.split(' ')[0] || 'Admin'}
-                                </span>
-                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                                </svg>
+                                <span className="font-medium">Hi, {user?.fullName?.split(' ')[0] || 'Admin'}</span>
+                                <svg className={`w-4 h-4 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
@@ -232,10 +230,7 @@ const AdminLayout = () => {
                             {/* Dropdown */}
                             {isUserMenuOpen && (
                                 <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-100 dark:border-gray-700 py-1 z-50">
-                                    <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
-                                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.fullName}</p>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
-                                    </div>
+                                    {/* Removed Header to match Navbar style */}
                                     <Link
                                         to="/"
                                         className="flex items-center space-x-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -247,7 +242,7 @@ const AdminLayout = () => {
                                     </Link>
                                     <button
                                         onClick={handleLogout}
-                                        className="flex items-center space-x-2 w-full px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
+                                        className="flex items-center space-x-2 w-full px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                                     >
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
