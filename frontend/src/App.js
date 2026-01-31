@@ -3,6 +3,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import AdminLayout from './components/AdminLayout';
 import HomePage from './pages/HomePage';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
+import UserDashboard from './pages/UserDashboard';
+import SettingsPage from './pages/SettingsPage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import FAQPage from './pages/FAQPage';
 import Dashboard from './pages/admin/Dashboard';
 import ReceiveParcel from './pages/admin/ReceiveParcel';
 import ManageParcels from './pages/admin/ManageParcels';
@@ -27,12 +34,16 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<PlaceholderPage title="Sign In" />} />
-              <Route path="/register" element={<PlaceholderPage title="Sign Up" />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/dashboard" element={<UserDashboard />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/faq" element={<FAQPage />} />
               <Route path="/tracking" element={<PlaceholderPage title="Track Parcel" />} />
               <Route path="/services" element={<PlaceholderPage title="Services" />} />
               <Route path="/pricing" element={<PlaceholderPage title="Pricing" />} />
-              <Route path="/contact" element={<PlaceholderPage title="Contact" />} />
               <Route path="/features" element={<PlaceholderPage title="Features" />} />
             </Routes>
           </div>
