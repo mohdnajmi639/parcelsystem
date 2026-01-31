@@ -479,7 +479,7 @@ async function start() {
         });
 
         // --- USER MANAGEMENT ROUTES ---
-        const users = db.collection("users");
+        // const users = db.collection("users"); // Use existing collection reference
 
         // Get all users
         app.get('/api/users', async (req, res) => {
