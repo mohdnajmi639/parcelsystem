@@ -5,6 +5,11 @@ const UserDashboard = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [expandedBox, setExpandedBox] = useState(null);
+
+    const toggleExpand = (boxName) => {
+        setExpandedBox(expandedBox === boxName ? null : boxName);
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -44,58 +49,70 @@ const UserDashboard = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
-                        <div className="flex items-center space-x-4">
-                            <div className="w-14 h-14 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center">
+                    <div
+                        className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 cursor-pointer transition-all duration-300 hover:shadow-xl ${expandedBox === 'email' ? 'ring-2 ring-orange-500' : ''}`}
+                        onClick={() => toggleExpand('email')}
+                    >
+                        <div className="flex items-center space-x-4 min-w-0">
+                            <div className="w-14 h-14 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
                                 <svg className="w-7 h-7 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                             </div>
-                            <div>
+                            <div className="min-w-0 flex-1">
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Email Address</p>
-                                <p className="text-lg font-semibold text-gray-900 dark:text-white truncate">{user?.email}</p>
+                                <p className={`text-lg font-semibold text-gray-900 dark:text-white ${expandedBox === 'email' ? 'break-all' : 'truncate'}`}>{user?.email}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
-                        <div className="flex items-center space-x-4">
-                            <div className="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center">
+                    <div
+                        className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 cursor-pointer transition-all duration-300 hover:shadow-xl ${expandedBox === 'studentId' ? 'ring-2 ring-primary-500' : ''}`}
+                        onClick={() => toggleExpand('studentId')}
+                    >
+                        <div className="flex items-center space-x-4 min-w-0">
+                            <div className="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
                                 <svg className="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0c0 .883-.393 1.627-1.08 1.998" />
                                 </svg>
                             </div>
-                            <div>
+                            <div className="min-w-0 flex-1">
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Student ID</p>
-                                <p className="text-lg font-semibold text-gray-900 dark:text-white">{user?.studentId}</p>
+                                <p className={`text-lg font-semibold text-gray-900 dark:text-white ${expandedBox === 'studentId' ? 'break-all' : 'truncate'}`}>{user?.studentId}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
-                        <div className="flex items-center space-x-4">
-                            <div className="w-14 h-14 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+                    <div
+                        className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 cursor-pointer transition-all duration-300 hover:shadow-xl ${expandedBox === 'phone' ? 'ring-2 ring-green-500' : ''}`}
+                        onClick={() => toggleExpand('phone')}
+                    >
+                        <div className="flex items-center space-x-4 min-w-0">
+                            <div className="w-14 h-14 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
                                 <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                 </svg>
                             </div>
-                            <div>
+                            <div className="min-w-0 flex-1">
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Phone Number</p>
-                                <p className="text-lg font-semibold text-gray-900 dark:text-white">{user?.phoneNumber}</p>
+                                <p className={`text-lg font-semibold text-gray-900 dark:text-white ${expandedBox === 'phone' ? 'break-all' : 'truncate'}`}>{user?.phoneNumber}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
-                        <div className="flex items-center space-x-4">
-                            <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                    <div
+                        className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 cursor-pointer transition-all duration-300 hover:shadow-xl ${expandedBox === 'parcels' ? 'ring-2 ring-purple-500' : ''}`}
+                        onClick={() => toggleExpand('parcels')}
+                    >
+                        <div className="flex items-center space-x-4 min-w-0">
+                            <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
                                 <svg className="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                 </svg>
                             </div>
-                            <div>
+                            <div className="min-w-0 flex-1">
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Total Parcels</p>
-                                <p className="text-lg font-semibold text-gray-900 dark:text-white">0</p>
+                                <p className={`text-lg font-semibold text-gray-900 dark:text-white ${expandedBox === 'parcels' ? 'break-all' : 'truncate'}`}>0</p>
                             </div>
                         </div>
                     </div>

@@ -93,8 +93,7 @@ const Navbar = () => {
                     <div className="hidden md:flex items-center space-x-8">
                         <Link to="/" className="nav-link">Home</Link>
                         <Link to="/about" className="nav-link">About</Link>
-                        <Link to="/services" className="nav-link">Services</Link>
-                        <Link to="/tracking" className="nav-link">Track Parcel</Link>
+
                         <Link to="/faq" className="nav-link">FAQ</Link>
                         <Link to="/contact" className="nav-link">Contact</Link>
                     </div>
@@ -209,8 +208,7 @@ const Navbar = () => {
                         <div className="flex flex-col space-y-4">
                             <Link to="/" className="nav-link">Home</Link>
                             <Link to="/about" className="nav-link">About</Link>
-                            <Link to="/services" className="nav-link">Services</Link>
-                            <Link to="/tracking" className="nav-link">Track Parcel</Link>
+
                             <Link to="/faq" className="nav-link">FAQ</Link>
                             <Link to="/contact" className="nav-link">Contact</Link>
                             <div className="flex flex-col space-y-2 pt-4 border-t border-gray-100 dark:border-gray-800">

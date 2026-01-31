@@ -45,8 +45,7 @@ function App() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/faq" element={<FAQPage />} />
-              <Route path="/tracking" element={<PlaceholderPage title="Track Parcel" />} />
-              <Route path="/services" element={<PlaceholderPage title="Services" />} />
+
               <Route path="/pricing" element={<PlaceholderPage title="Pricing" />} />
               <Route path="/features" element={<PlaceholderPage title="Features" />} />
             </Routes>

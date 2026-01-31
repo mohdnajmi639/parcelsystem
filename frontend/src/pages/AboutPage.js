@@ -2,12 +2,26 @@ import React from 'react';
 
 const AboutPage = () => {
     return (
-        <div className="min-h-screen pt-20 pb-12 bg-gray-50 dark:bg-gray-900">
-            {/* Hero Section */}
-            <div className="bg-primary-600 text-white py-20 px-4 sm:px-6 lg:px-8 mb-12">
-                <div className="max-w-7xl mx-auto text-center">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+            {/* Hero Section with Video Background */}
+            <div className="relative overflow-hidden text-white py-20 px-4 sm:px-6 lg:px-8 mb-12 h-[500px] flex items-center justify-center -mt-20">
+                {/* YouTube Video Background */}
+                <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+                    <iframe
+                        className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-[2.5]"
+                        src="https://www.youtube.com/embed/UtrbnCYow_s?autoplay=1&mute=1&loop=1&playlist=UtrbnCYow_s&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+                        title="Background Video"
+                        frameBorder="0"
+                        allow="autoplay; encrypted-media"
+                        allowFullScreen
+                    ></iframe>
+                </div>
+                {/* Dark Overlay */}
+                <div className="absolute inset-0 bg-black/60"></div>
+                {/* Content */}
+                <div className="relative z-10 max-w-7xl mx-auto text-center pt-20">
                     <h1 className="text-4xl md:text-5xl font-bold mb-6">About ParcelHub</h1>
-                    <p className="text-xl md:text-2xl text-primary-100 max-w-3xl mx-auto">
+                    <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
                         We are revolutionizing campus logistics with smart, secure, and seamless parcel tracking solutions.
                     </p>
                 </div>
@@ -45,46 +59,68 @@ const AboutPage = () => {
                 {/* Team Section */}
                 <div className="mb-20">
                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white text-center mb-12">Meet the Team</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {/* Team Member 1 */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {/* Team Member 1 - Mr. Najmi */}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 group hover:shadow-xl transition-shadow">
-                            <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                <svg className="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                                </svg>
+                            <div className="h-80 bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                                <img
+                                    src="/images/team/mr-najmi.png"
+                                    alt="Mr. Najmi"
+                                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                />
                             </div>
                             <div className="p-6 text-center">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Alex Johnson</h3>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Mr. Najmi</h3>
                                 <p className="text-primary-600 font-medium mb-3">CEO & Founder</p>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm">Passionate about logistics and student welfare.</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">Leading the vision and strategic direction of ParcelHub.</p>
                             </div>
                         </div>
 
-                        {/* Team Member 2 */}
+                        {/* Team Member 2 - Mr. Amsyar */}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 group hover:shadow-xl transition-shadow">
-                            <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                <svg className="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                                </svg>
+                            <div className="h-80 bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                                <img
+                                    src="/images/team/mr-amsyar.png"
+                                    alt="Mr. Amsyar"
+                                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                />
                             </div>
                             <div className="p-6 text-center">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Sarah Lee</h3>
-                                <p className="text-primary-600 font-medium mb-3">Lead Developer</p>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm">Building robust and scalable systems.</p>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Mr. Amsyar</h3>
+                                <p className="text-primary-600 font-medium mb-3">System Developer</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">Building robust and scalable systems for seamless operations.</p>
                             </div>
                         </div>
 
-                        {/* Team Member 3 */}
+                        {/* Team Member 3 - Mr. Megat */}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 group hover:shadow-xl transition-shadow">
-                            <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                <svg className="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                                </svg>
+                            <div className="h-80 bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                                <img
+                                    src="/images/team/mr-megat.png"
+                                    alt="Mr. Megat"
+                                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                />
                             </div>
                             <div className="p-6 text-center">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Mike Brown</h3>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Mr. Megat</h3>
                                 <p className="text-primary-600 font-medium mb-3">Operations Manager</p>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm">Ensuring smooth daily operations.</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">Ensuring smooth daily operations and logistics.</p>
+                            </div>
+                        </div>
+
+                        {/* Team Member 4 - Mr. Faris */}
+                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 group hover:shadow-xl transition-shadow">
+                            <div className="h-80 bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                                <img
+                                    src="/images/team/mr-faris.png"
+                                    alt="Mr. Faris"
+                                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                />
+                            </div>
+                            <div className="p-6 text-center">
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Mr. Faris</h3>
+                                <p className="text-primary-600 font-medium mb-3">System Analyst</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">Analyzing requirements and optimizing system performance.</p>
                             </div>
                         </div>
                     </div>
