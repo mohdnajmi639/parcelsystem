@@ -33,20 +33,33 @@ const HomePage = () => {
                                 Built for residents and administrators to streamline parcel management.
                             </p>
 
-                            {/* CTA Buttons */}
-                            <div className="flex flex-wrap gap-4 mb-12">
-                                <Link to="/register" className="btn-primary inline-flex items-center space-x-2">
-                                    <span>Get Started</span>
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </Link>
-                                <Link to="/features" className="btn-secondary inline-flex items-center space-x-2">
-                                    <span>See Features</span>
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </Link>
+                            {/* Tracking Input Section */}
+                            <div className="w-full max-w-lg mb-12">
+                                <form className="flex items-center p-2 bg-white dark:bg-gray-800 rounded-full shadow-2xl border border-gray-100 dark:border-gray-700 relative z-20 transition-all hover:shadow-3xl focus-within:ring-4 focus-within:ring-primary-100 dark:focus-within:ring-primary-900/30">
+                                    <div className="flex-1 relative">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            </svg>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            className="w-full pl-12 pr-4 py-3 bg-transparent border-none focus:ring-0 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-lg outline-none"
+                                            placeholder="Enter Tracking Number"
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full transition duration-200 shadow-md whitespace-nowrap"
+                                    >
+                                        Track Parcel
+                                    </button>
+                                </form>
+                                <div className="mt-4 flex items-center justify-between pl-4 pr-2 text-sm">
+                                    <p className="text-gray-500 dark:text-gray-400">
+                                        Note: Please copy and paste the tracking number or enter the full number above.
+                                    </p>
+                                </div>
                             </div>
 
                             {/* Trusted By Section */}
@@ -157,20 +170,60 @@ const HomePage = () => {
             </section>
 
             {/* Footer */}
-            <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-900 dark:bg-black border-t border-gray-800">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-col md:flex-row items-center justify-between">
-                        <div className="flex items-center space-x-2 mb-4 md:mb-0">
-                            <div className="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
-                                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4z" />
-                                </svg>
-                            </div>
-                            <span className="text-xl font-bold text-white">ParcelHub</span>
-                        </div>
+            <footer className="py-8 px-4 sm:px-6 lg:px-8 bg-gray-900 dark:bg-black border-t border-gray-800">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-end gap-6">
+                    {/* Left Side - Copyright */}
+                    <div className="order-2 md:order-1 w-full md:w-auto text-center md:text-left">
                         <p className="text-gray-400 text-sm">
-                            © 2024 ParcelHub. All rights reserved.
+                            © Copyright 2026. All rights reserved by ParcelHub.
                         </p>
+                    </div>
+
+                    {/* Right Side - Contact & Socials */}
+                    <div className="flex flex-col items-center md:items-end gap-4 order-1 md:order-2 w-full md:w-auto">
+                        {/* Social Icons */}
+                        <div className="flex gap-3">
+                            <a href="#" className="p-2 bg-gray-800 rounded-lg text-gray-400 hover:text-white transition-colors">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+                                </svg>
+                            </a>
+                            <a href="#" className="p-2 bg-gray-800 rounded-lg text-gray-400 hover:text-white transition-colors">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+                                </svg>
+                            </a>
+                            <a href="#" className="p-2 bg-gray-800 rounded-lg text-gray-400 hover:text-white transition-colors">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
+                                    <circle cx="4" cy="4" r="2" />
+                                </svg>
+                            </a>
+                        </div>
+
+                        {/* Contact Info */}
+                        <div className="flex flex-col items-center md:items-end gap-2 text-sm text-gray-400">
+                            <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span>Jalan Pulau Angsa AU10/A Seksyen U10, UiTM Kampus Puncak Perdana</span>
+
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                </svg>
+                                <span>+60 (03) 3393 8996</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                <span>contact@parcelhub.com</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </footer>
