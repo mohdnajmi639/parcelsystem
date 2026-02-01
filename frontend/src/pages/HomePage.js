@@ -285,24 +285,31 @@ const HomePage = () => {
             </section>
 
             {/* Stats Section */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-primary-600 to-primary-800 dark:from-primary-900 dark:to-primary-800">
-                <div className="max-w-7xl mx-auto">
+            <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+                {/* Background Image */}
+                <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: "url('/images/banner/home.jpg')" }}
+                />
+                {/* Overlay for better text readability */}
+                <div className="absolute inset-0 bg-black/30" />
+                <div className="max-w-7xl mx-auto relative z-10">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
                         <div>
                             <p className="text-4xl sm:text-5xl font-bold text-white mb-2">5K+</p>
-                            <p className="text-primary-200 dark:text-primary-300">Parcels Tracked</p>
+                            <p className="text-gray-200">Parcels Tracked</p>
                         </div>
                         <div>
                             <p className="text-4xl sm:text-5xl font-bold text-white mb-2">99.9%</p>
-                            <p className="text-primary-200 dark:text-primary-300">Uptime</p>
+                            <p className="text-gray-200">Uptime</p>
                         </div>
                         <div>
                             <p className="text-4xl sm:text-5xl font-bold text-white mb-2">500+</p>
-                            <p className="text-primary-200 dark:text-primary-300">Active Users</p>
+                            <p className="text-gray-200">Active Users</p>
                         </div>
                         <div>
                             <p className="text-4xl sm:text-5xl font-bold text-white mb-2">24/7</p>
-                            <p className="text-primary-200 dark:text-primary-300">Support</p>
+                            <p className="text-gray-200">Support</p>
                         </div>
                     </div>
                 </div>
@@ -322,22 +329,21 @@ const HomePage = () => {
                     <div className="flex flex-col items-center md:items-end gap-4 order-1 md:order-2 w-full md:w-auto">
                         {/* Social Icons */}
                         <div className="flex gap-3">
-                            <button className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-primary-500 hover:text-white transition-all">
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
-                                </svg>
-                            </button>
-                            <button className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-primary-500 hover:text-white transition-all">
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
-                                </svg>
-                            </button>
-                            <button className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-primary-500 hover:text-white transition-all">
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
-                                    <circle cx="4" cy="4" r="2" />
-                                </svg>
-                            </button>
+                            {/* Instagram */}
+                            <a href="https://www.instagram.com/najmii.exe/" target="_blank" rel="noopener noreferrer" className="group p-2 bg-gray-100 dark:bg-gray-800 rounded-lg transition-all relative">
+                                <img src="/images/social media/instagram1.png" alt="Instagram" className="w-5 h-5 object-contain group-hover:opacity-0 transition-opacity" />
+                                <img src="/images/social media/instagram.png" alt="Instagram" className="w-5 h-5 object-contain absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </a>
+                            {/* Twitter/X */}
+                            <a href="https://x.com/ameamsyr" target="_blank" rel="noopener noreferrer" className="group p-2 bg-gray-100 dark:bg-gray-800 rounded-lg transition-all relative">
+                                <img src="/images/social media/twitter1.png" alt="Twitter" className="w-5 h-5 object-contain group-hover:opacity-0 transition-opacity" />
+                                <img src="/images/social media/twitter.png" alt="Twitter" className="w-5 h-5 object-contain absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </a>
+                            {/* TikTok */}
+                            <a href="https://www.tiktok.com/@ameamsyr" target="_blank" rel="noopener noreferrer" className="group p-2 bg-gray-100 dark:bg-gray-800 rounded-lg transition-all relative">
+                                <img src="/images/social media/tiktok1.png" alt="TikTok" className="w-5 h-5 object-contain group-hover:opacity-0 transition-opacity" />
+                                <img src="/images/social media/tiktok.png" alt="TikTok" className="w-5 h-5 object-contain absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </a>
                         </div>
 
                         {/* Contact Info */}
