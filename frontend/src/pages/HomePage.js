@@ -440,96 +440,130 @@ const HomePage = () => {
 
                                 {/* Payment Section */}
                                 <div className="border-t border-gray-100 dark:border-gray-700 pt-6">
-                                    {trackingResult.status === 'Collected' && paymentStatus !== 'success' ? (
-                                        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 text-center border border-gray-100 dark:border-gray-600">
-                                            <div className="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                                                <svg className="w-6 h-6 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                </svg>
-                                            </div>
-                                            <h4 className="text-lg font-bold text-gray-900 dark:text-white">Parcel Collected</h4>
-                                            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                                                This parcel has already been paid for and collected.
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Make Payment</h3>
+                                    {/* Phone Number Verification */}
+                                    {(() => {
+                                        const user = JSON.parse(localStorage.getItem('user') || '{}');
+                                        const userPhone = user.phoneNumber || '';
+                                        const parcelPhone = trackingResult.phone || '';
+                                        const normalize = (p) => p ? String(p).replace(/[^0-9]/g, '') : '';
+                                        const isPhoneMatch = normalize(userPhone) === normalize(parcelPhone);
 
-                                            {/* Success State */}
-                                            {paymentStatus === 'success' ? (
-                                                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-6 text-center animate-fade-in-up">
-                                                    <div className="w-16 h-16 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                        <svg className="w-8 h-8 text-green-600 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                        // If user is admin, maybe allow? For now, stick to user requirement.
+                                        // Requirement: "if the phone number is not the same ... disable ... pay and collect"
+
+                                        if (!isPhoneMatch) {
+                                            return (
+                                                <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-6 text-center border border-yellow-100 dark:border-yellow-800">
+                                                    <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                                                        <svg className="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                                         </svg>
                                                     </div>
-                                                    <h3 className="text-xl font-bold text-green-700 dark:text-green-300 mb-2">Payment Successful!</h3>
-                                                    <p className="text-green-600 dark:text-green-400 mb-4">
-                                                        Parcel collected successfully. It has been recorded in your dashboard history.
+                                                    <h4 className="text-lg font-bold text-gray-900 dark:text-white">Verification Failed</h4>
+                                                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                                                        You cannot collect this parcel because the phone number does not match your account.
                                                     </p>
-                                                    <p className="text-green-700 dark:text-green-400">
-                                                        {paymentMethod === 'banking' ? `Paid via ${selectedBank}` : 'Pay at Counter option selected'}
-                                                    </p>
-                                                    <div className="mt-4 p-3 bg-white dark:bg-gray-800 rounded-lg border border-green-100 dark:border-green-900/50">
-                                                        <p className="text-sm font-mono text-gray-500 dark:text-gray-400">Transaction ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                                                </div>
+                                            );
+                                        }
+
+                                        // If collected
+                                        if (trackingResult.status === 'Collected' && paymentStatus !== 'success') {
+                                            return (
+                                                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 text-center border border-gray-100 dark:border-gray-600">
+                                                    <div className="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                                        <svg className="w-6 h-6 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                        </svg>
                                                     </div>
-                                                    <p className="text-xs text-green-600 dark:text-green-500 mt-4">Status updated to 'Collected'</p>
+                                                    <h4 className="text-lg font-bold text-gray-900 dark:text-white">Parcel Collected</h4>
+                                                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                                                        This parcel has already been paid for and collected.
+                                                    </p>
                                                 </div>
-                                            ) : (
-                                                <div className="space-y-4">
-                                                    {/* Payment Method Selection */}
-                                                    {paymentStatus === 'processing' ? (
-                                                        <div className="flex flex-col items-center justify-center py-8 space-y-4">
-                                                            <svg className="animate-spin h-10 w-10 text-primary-600" fill="none" viewBox="0 0 24 24">
-                                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            );
+                                        }
+
+                                        // Default: Show Payment Options
+                                        return (
+                                            <>
+                                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Make Payment</h3>
+
+                                                {/* Success State */}
+                                                {paymentStatus === 'success' ? (
+                                                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-6 text-center animate-fade-in-up">
+                                                        <div className="w-16 h-16 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                            <svg className="w-8 h-8 text-green-600 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                                             </svg>
-                                                            <p className="text-gray-600 dark:text-gray-300 animate-pulse">Processing Payment...</p>
                                                         </div>
-                                                    ) : (
-                                                        <>
-                                                            {/* Option 1: Internet Banking */}
-                                                            <div>
-                                                                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Option 1: Internet Banking</p>
-                                                                <div className="grid grid-cols-2 gap-2">
-                                                                    {banks.map((bank) => (
-                                                                        <button
-                                                                            key={bank.name}
-                                                                            onClick={() => handlePayment('banking', bank.name)}
-                                                                            className={`${bank.color} hover:opacity-90 py-2 px-3 rounded-lg text-sm font-semibold transition-transform active:scale-95`}
-                                                                        >
-                                                                            {bank.name}
-                                                                        </button>
-                                                                    ))}
+                                                        <h3 className="text-xl font-bold text-green-700 dark:text-green-300 mb-2">Payment Successful!</h3>
+                                                        <p className="text-green-600 dark:text-green-400 mb-4">
+                                                            Parcel collected successfully. It has been recorded in your dashboard history.
+                                                        </p>
+                                                        <p className="text-green-700 dark:text-green-400">
+                                                            {paymentMethod === 'banking' ? `Paid via ${selectedBank}` : 'Pay at Counter option selected'}
+                                                        </p>
+                                                        <div className="mt-4 p-3 bg-white dark:bg-gray-800 rounded-lg border border-green-100 dark:border-green-900/50">
+                                                            <p className="text-sm font-mono text-gray-500 dark:text-gray-400">Transaction ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                                                        </div>
+                                                        <p className="text-xs text-green-600 dark:text-green-500 mt-4">Status updated to 'Collected'</p>
+                                                    </div>
+                                                ) : (
+                                                    <div className="space-y-4">
+                                                        {/* Payment Method Selection */}
+                                                        {paymentStatus === 'processing' ? (
+                                                            <div className="flex flex-col items-center justify-center py-8 space-y-4">
+                                                                <svg className="animate-spin h-10 w-10 text-primary-600" fill="none" viewBox="0 0 24 24">
+                                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                                </svg>
+                                                                <p className="text-gray-600 dark:text-gray-300 animate-pulse">Processing Payment...</p>
+                                                            </div>
+                                                        ) : (
+                                                            <>
+                                                                {/* Option 1: Internet Banking */}
+                                                                <div>
+                                                                    <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Option 1: Internet Banking</p>
+                                                                    <div className="grid grid-cols-2 gap-2">
+                                                                        {banks.map((bank) => (
+                                                                            <button
+                                                                                key={bank.name}
+                                                                                onClick={() => handlePayment('banking', bank.name)}
+                                                                                className={`${bank.color} hover:opacity-90 py-2 px-3 rounded-lg text-sm font-semibold transition-transform active:scale-95`}
+                                                                            >
+                                                                                {bank.name}
+                                                                            </button>
+                                                                        ))}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div className="relative flex py-2 items-center">
-                                                                <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
-                                                                <span className="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase">Or</span>
-                                                                <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
-                                                            </div>
+                                                                <div className="relative flex py-2 items-center">
+                                                                    <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+                                                                    <span className="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase">Or</span>
+                                                                    <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+                                                                </div>
 
-                                                            {/* Option 2: Pay at Counter */}
-                                                            <div>
-                                                                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Option 2: Cash</p>
-                                                                <button
-                                                                    onClick={() => handlePayment('counter')}
-                                                                    className="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 transition-colors border-2 border-dashed border-gray-300 dark:border-gray-600"
-                                                                >
-                                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                                                                    </svg>
-                                                                    <span>Pay at Counter</span>
-                                                                </button>
-                                                            </div>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            )}
-                                        </>
-                                    )}
+                                                                {/* Option 2: Pay at Counter */}
+                                                                <div>
+                                                                    <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Option 2: Cash</p>
+                                                                    <button
+                                                                        onClick={() => handlePayment('counter')}
+                                                                        className="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 transition-colors border-2 border-dashed border-gray-300 dark:border-gray-600"
+                                                                    >
+                                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                                        </svg>
+                                                                        <span>Pay at Counter</span>
+                                                                    </button>
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                             </div>
 

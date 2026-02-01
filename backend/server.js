@@ -311,9 +311,9 @@ async function start() {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
 
-                const sevenDaysAgo = new Date();
-                sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-                sevenDaysAgo.setHours(0, 0, 0, 0);
+                const oneMonthAgo = new Date();
+                oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+                oneMonthAgo.setHours(0, 0, 0, 0);
 
                 // Parcels received today
                 const parcelsToday = await parcels.countDocuments({
@@ -325,10 +325,10 @@ async function start() {
                     status: 'Received'
                 });
 
-                // Overdue: Received more than 7 days ago and still not collected
+                // Overdue: Received more than 30 days ago and still not collected
                 const overdue = await parcels.countDocuments({
                     status: 'Received',
-                    createdAt: { $lt: sevenDaysAgo }
+                    createdAt: { $lt: oneMonthAgo }
                 });
 
                 // Total parcels

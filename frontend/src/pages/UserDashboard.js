@@ -168,7 +168,7 @@ const UserDashboard = () => {
                     </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 mb-20">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Recent Parcel History</h2>
 
                     {historyLoading ? (
