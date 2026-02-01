@@ -15,6 +15,7 @@ import ReceiveParcel from './pages/admin/ReceiveParcel';
 import ManageParcels from './pages/admin/ManageParcels';
 import ManageUsers from './pages/admin/ManageUsers';
 import ManageCategories from './pages/admin/ManageCategories';
+import ManageCouriers from './pages/admin/ManageCouriers';
 import Reports from './pages/admin/Reports';
 import './index.css';
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="parcels" element={<ManageParcels />} />
           <Route path="users" element={<ManageUsers />} />
           <Route path="categories" element={<ManageCategories />} />
+          <Route path="couriers" element={<ManageCouriers />} />
           <Route path="reports" element={<Reports />} />
         </Route>
 

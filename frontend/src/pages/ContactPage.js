@@ -50,8 +50,7 @@ const ContactPage = () => {
                                     <div>
                                         <h3 className="font-semibold text-gray-900 dark:text-white">Visit Us</h3>
                                         <p className="text-gray-600 dark:text-gray-400 mt-1">
-                                            JasHub Center, Student Union Building<br />
-                                            University Campus, 50603
+                                            Jalan Pulau Angsa AU10/A Seksyen U10, UiTM Kampus Puncak Perdana
                                         </p>
                                     </div>
                                 </div>
@@ -64,8 +63,7 @@ const ContactPage = () => {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-gray-900 dark:text-white">Email Us</h3>
-                                        <p className="text-gray-600 dark:text-gray-400 mt-1">support@jashub.edu</p>
-                                        <p className="text-gray-600 dark:text-gray-400">info@jashub.edu</p>
+                                        <p className="text-gray-600 dark:text-gray-400 mt-1">contact@jashub.com</p>
                                     </div>
                                 </div>
 
@@ -77,7 +75,7 @@ const ContactPage = () => {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-gray-900 dark:text-white">Call Us</h3>
-                                        <p className="text-gray-600 dark:text-gray-400 mt-1">+60 3-1234 5678</p>
+                                        <p className="text-gray-600 dark:text-gray-400 mt-1">+60 (03) 3393 8996</p>
                                         <p className="text-gray-600 dark:text-gray-400">Mon-Fri: 9am - 5pm</p>
                                     </div>
                                 </div>

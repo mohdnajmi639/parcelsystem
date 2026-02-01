@@ -22,16 +22,19 @@ const ManageParcels = () => {
     });
     const [message, setMessage] = useState({ type: '', text: '' });
 
-    const couriers = [
-        'J&T Express',
-        'Pos Laju',
-        'DHL',
-        'FedEx',
-        'Ninja Van',
-        'Shopee Express',
-        'Lazada Express',
-        'Other'
-    ];
+    const [couriers, setCouriers] = useState([]);
+
+    useEffect(() => {
+        const fetchCouriers = async () => {
+            try {
+                const res = await axios.get(`${API_URL}/couriers`);
+                setCouriers(res.data.map(c => c.name));
+            } catch (error) {
+                console.error('Failed to fetch couriers:', error);
+            }
+        };
+        fetchCouriers();
+    }, []);
 
     const categoryOptions = [
         { group: 'Weight', items: ['1kg', '3kg', '5kg', 'Above 5kg'], color: 'purple' },
