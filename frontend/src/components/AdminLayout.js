@@ -143,7 +143,7 @@ const AdminLayout = () => {
                         </div>
                         {sidebarOpen && (
                             <div>
-                                <h1 className="text-lg font-bold text-gray-900 dark:text-white">ParcelHub</h1>
+                                <h1 className="text-lg font-bold text-gray-900 dark:text-white">JasHub</h1>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">Admin Panel</p>
                             </div>
                         )}
