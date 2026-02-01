@@ -76,7 +76,7 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="min-h-screen pt-20 pb-12 flex flex-col bg-gradient-to-br from-gray-50 via-white to-primary-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+        <div className="min-h-screen pt-20 pb-12 flex flex-col">
             <div className="flex-1 flex items-center justify-center px-4">
                 <div className="max-w-md w-full">
                     <div className="text-center mb-8">
@@ -89,7 +89,7 @@ const RegisterPage = () => {
                         <p className="mt-2 text-gray-600 dark:text-gray-400">Join JasHub to track your parcels</p>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+                    <div className="glass rounded-2xl p-8">
                         {serverError && (
                             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm">
                                 {serverError}

@@ -35,7 +35,7 @@ const FAQPage = () => {
     };
 
     return (
-        <div className="min-h-screen pt-20 bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-screen pt-20">
             <div className="relative text-white py-16 px-4 mb-12 overflow-hidden">
                 {/* Background Image */}
                 <div
@@ -52,7 +52,7 @@ const FAQPage = () => {
             </div>
 
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700">
+                <div className="glass rounded-2xl border border-gray-100 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700">
                     {faqs.map((faq, index) => (
                         <div key={index} className="group">
                             <button

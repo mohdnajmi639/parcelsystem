@@ -41,7 +41,15 @@
   }
 
   .glass {
-    @apply bg-white/80 backdrop-blur-md dark:bg-gray-900/80 dark:border-gray-800;
+    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl dark:bg-gray-800/70 dark:border-gray-700/30;
+  }
+
+  /* Dot Grid Pattern */
+  .bg-dot-pattern {
+    background-image: radial-gradient(currentColor 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: linear-gradient(to bottom, white 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, white 40%, transparent 100%);
   }
 }
 
@@ -111,4 +119,35 @@
 .tooltip-text:hover::before {
   opacity: 1;
   visibility: visible;
+}
+
+/* Blob Animation */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
 }

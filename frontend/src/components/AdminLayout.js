@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import PageTransition from './PageTransition';
 
 const AdminLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -148,7 +150,14 @@ const AdminLayout = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex relative overflow-hidden">
+            {/* Background Decorations */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute inset-0 bg-dot-pattern text-gray-300 dark:text-gray-800 opacity-80"></div>
+                {/* Gradient Blobs */}
+                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-primary-400/30 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen opacity-90 animate-blob"></div>
+                <div className="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-purple-400/30 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen opacity-90 animate-blob animation-delay-2000"></div>
+            </div>
             {/* Sidebar */}
             <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col`}>
                 {/* Logo */}
@@ -274,7 +283,11 @@ const AdminLayout = () => {
                 </header>
 
                 <div className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
-                    <Outlet />
+                    <AnimatePresence mode="wait">
+                        <PageTransition key={location.pathname}>
+                            <Outlet />
+                        </PageTransition>
+                    </AnimatePresence>
                 </div>
             </main>
         </div>

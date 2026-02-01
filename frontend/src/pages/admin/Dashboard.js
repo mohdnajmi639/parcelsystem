@@ -135,7 +135,7 @@ const Dashboard = () => {
                 {statsCards.map((card, index) => (
                     <div
                         key={index}
-                        className={`bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer ${activeCard === index ? `ring-2 ${card.ringColor}` : ''}`}
+                        className={`glass rounded-2xl p-6 hover:shadow-2xl transition-all duration-300 border-none cursor-pointer ${activeCard === index ? `ring-2 ${card.ringColor}` : ''}`}
                         onClick={() => setActiveCard(activeCard === index ? null : index)}
                     >
                         <div className="flex items-center justify-between mb-4">
@@ -163,7 +163,7 @@ const Dashboard = () => {
             </div>
 
             {/* Recent Activity Table */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div className="glass rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
                 <div className="p-6 border-b border-gray-100 dark:border-gray-700">
                     <div className="flex items-center justify-between">
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>

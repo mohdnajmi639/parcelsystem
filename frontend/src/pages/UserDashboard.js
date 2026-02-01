@@ -9,6 +9,8 @@ const UserDashboard = () => {
     const [expandedBox, setExpandedBox] = useState(null);
     const [historyLoading, setHistoryLoading] = useState(false);
     const [parcelHistory, setParcelHistory] = useState([]);
+    const [sortField, setSortField] = useState('updatedAt');
+    const [sortOrder, setSortOrder] = useState('desc');
 
     const toggleExpand = (boxName) => {
         setExpandedBox(expandedBox === boxName ? null : boxName);
@@ -47,6 +49,38 @@ const UserDashboard = () => {
             });
     }, [navigate]);
 
+    // Sorting function
+    const handleSort = (field) => {
+        if (sortField === field) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
+    };
+
+    // Sort parcels
+    const sortedParcels = [...parcelHistory].sort((a, b) => {
+        let aVal = a[sortField];
+        let bVal = b[sortField];
+
+        // Handle date fields
+        if (sortField === 'updatedAt' || sortField === 'createdAt') {
+            aVal = new Date(a.updatedAt || a.createdAt);
+            bVal = new Date(b.updatedAt || b.createdAt);
+        }
+
+        // Handle string comparison
+        if (typeof aVal === 'string') {
+            aVal = aVal.toLowerCase();
+            bVal = bVal.toLowerCase();
+        }
+
+        if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+        return 0;
+    });
+
 
 
     if (loading) {
@@ -58,7 +92,7 @@ const UserDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen pt-20 bg-gradient-to-br from-gray-50 via-white to-primary-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+        <div className="min-h-screen pt-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-8">
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
@@ -180,15 +214,106 @@ const UserDashboard = () => {
                             <table className="w-full">
                                 <thead className="bg-gray-50 dark:bg-gray-700/50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tracking Number</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Courier</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                                        <th
+                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors group"
+                                            onClick={() => handleSort('trackingNumber')}
+                                        >
+                                            <div className="flex items-center space-x-1">
+                                                <span>Tracking Number</span>
+                                                <div className="flex flex-col">
+                                                    {sortField === 'trackingNumber' ? (
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={sortOrder === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'} />
+                                                        </svg>
+                                                    ) : (
+                                                        <svg className="w-4 h-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th
+                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors group"
+                                            onClick={() => handleSort('courier')}
+                                        >
+                                            <div className="flex items-center space-x-1">
+                                                <span>Courier</span>
+                                                <div className="flex flex-col">
+                                                    {sortField === 'courier' ? (
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={sortOrder === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'} />
+                                                        </svg>
+                                                    ) : (
+                                                        <svg className="w-4 h-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th
+                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors group"
+                                            onClick={() => handleSort('shelfLocation')}
+                                        >
+                                            <div className="flex items-center space-x-1">
+                                                <span>Location</span>
+                                                <div className="flex flex-col">
+                                                    {sortField === 'shelfLocation' ? (
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={sortOrder === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'} />
+                                                        </svg>
+                                                    ) : (
+                                                        <svg className="w-4 h-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th
+                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors group"
+                                            onClick={() => handleSort('status')}
+                                        >
+                                            <div className="flex items-center space-x-1">
+                                                <span>Status</span>
+                                                <div className="flex flex-col">
+                                                    {sortField === 'status' ? (
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={sortOrder === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'} />
+                                                        </svg>
+                                                    ) : (
+                                                        <svg className="w-4 h-4 text-gray-300 dark:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th
+                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors group"
+                                            onClick={() => handleSort('updatedAt')}
+                                        >
+                                            <div className="flex items-center space-x-1">
+                                                <span>Date</span>
+                                                <div className="flex flex-col">
+                                                    {sortField === 'updatedAt' ? (
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={sortOrder === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'} />
+                                                        </svg>
+                                                    ) : (
+                                                        <svg className="w-4 h-4 text-gray-300 dark:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    {parcelHistory.map((parcel) => (
+                                    {sortedParcels.map((parcel) => (
                                         <tr key={parcel._id}>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                                 {parcel.trackingNumber}

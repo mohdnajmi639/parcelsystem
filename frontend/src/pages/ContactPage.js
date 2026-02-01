@@ -57,7 +57,7 @@ const ContactPage = () => {
     };
 
     return (
-        <div className="min-h-screen pt-20 bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-screen pt-20">
             <div className="relative text-white py-16 px-4 mb-12 overflow-hidden">
                 {/* Background Image */}
                 <div
@@ -77,7 +77,7 @@ const ContactPage = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     {/* Contact Info */}
                     <div className="space-y-8">
-                        <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+                        <div className="glass p-8 rounded-2xl border border-gray-100 dark:border-gray-700">
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Get in Touch</h2>
 
                             <div className="space-y-6">
@@ -126,7 +126,7 @@ const ContactPage = () => {
 
                     {/* Contact Form */}
                     <div
-                        className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 transition-all"
+                        className="glass p-8 rounded-2xl border border-gray-100 dark:border-gray-700 transition-all"
                         onClickCapture={handleAuthCheck}
                     >
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send a Message</h2>

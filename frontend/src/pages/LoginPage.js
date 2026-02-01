@@ -52,7 +52,7 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen pt-20 pb-12 flex flex-col bg-gradient-to-br from-gray-50 via-white to-primary-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+        <div className="min-h-screen pt-20 pb-12 flex flex-col">
             <div className="flex-1 flex items-center justify-center px-4">
                 <div className="max-w-md w-full">
                     <div className="text-center mb-8">
@@ -65,7 +65,7 @@ const LoginPage = () => {
                         <p className="mt-2 text-gray-600 dark:text-gray-400">Sign in to your JasHub account</p>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+                    <div className="glass rounded-2xl p-8">
                         {successMessage && (
                             <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-xl text-green-600 dark:text-green-400 text-sm">
                                 {successMessage}

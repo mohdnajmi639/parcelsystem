@@ -2,7 +2,7 @@ import React from 'react';
 
 const AboutPage = () => {
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-screen">
             {/* Hero Section with Video Background */}
             <div className="relative overflow-hidden text-white py-20 px-4 sm:px-6 lg:px-8 mb-12 h-[400px] flex items-center justify-center">
                 {/* YouTube Video Background */}

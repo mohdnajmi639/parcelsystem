@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import PublicLayout from './components/PublicLayout';
 import AdminLayout from './components/AdminLayout';
 import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
@@ -37,24 +37,19 @@ function App() {
         </Route>
 
         {/* Public Routes */}
-        <Route path="/*" element={
-          <div className="min-h-screen bg-white">
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/dashboard" element={<UserDashboard />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/faq" element={<FAQPage />} />
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/faq" element={<FAQPage />} />
 
-              <Route path="/pricing" element={<PlaceholderPage title="Pricing" />} />
-              <Route path="/features" element={<PlaceholderPage title="Features" />} />
-            </Routes>
-          </div>
-        } />
+          <Route path="/pricing" element={<PlaceholderPage title="Pricing" />} />
+          <Route path="/features" element={<PlaceholderPage title="Features" />} />
+        </Route>
       </Routes>
     </Router>
   );
