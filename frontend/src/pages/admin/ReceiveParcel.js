@@ -37,14 +37,7 @@ const ReceiveParcel = () => {
         { group: 'Parcel Type', items: ['Fragile', 'Electronics', 'General'], color: 'orange' }
     ];
 
-    const getCategoryColor = (category) => {
-        for (const group of categoryOptions) {
-            if (group.items.includes(category)) {
-                return group.color;
-            }
-        }
-        return 'gray';
-    };
+
 
     const getColorClasses = (color, isSelected) => {
         const colors = {

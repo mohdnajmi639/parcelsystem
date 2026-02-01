@@ -86,18 +86,7 @@ const ManageCouriers = () => {
         setEditModal({ open: true, courier });
     };
 
-    const formatDate = (dateString) => {
-        if (!dateString) return 'N/A';
-        return new Date(dateString).toLocaleString('en-MY', {
-            timeZone: 'Asia/Kuala_Lumpur',
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        });
-    };
+
 
     if (loading) {
         return (
