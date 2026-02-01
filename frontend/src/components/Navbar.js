@@ -8,12 +8,13 @@ const Navbar = () => {
     const [user, setUser] = useState(null);
     const userMenuRef = useRef(null);
     const [isDarkMode, setIsDarkMode] = useState(() => {
-        // Check local storage or system preference on initial load
-        if (localStorage.getItem('theme') === 'dark' ||
-            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        // Default to dark mode if no preference is set, or if 'dark' is explicitly saved
+        if (localStorage.getItem('theme') === 'dark' || !('theme' in localStorage)) {
             document.documentElement.classList.add('dark');
             return true;
         }
+        // Otherwise (if 'light' is saved), ensure class is removed
+        document.documentElement.classList.remove('dark');
         return false;
     });
 

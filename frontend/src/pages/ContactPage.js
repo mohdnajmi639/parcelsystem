@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ContactPage = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -9,16 +12,46 @@ const ContactPage = () => {
     });
     const [status, setStatus] = useState(null);
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+
+        if (token && storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                setFormData(prev => ({
+                    ...prev,
+                    name: user.fullName || '',
+                    email: user.email || ''
+                }));
+            } catch (error) {
+                console.error("Error parsing user data", error);
+            }
+        }
+    }, []);
+
+    const handleAuthCheck = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login', { state: { message: "Please log in to send a message." } });
+        }
+    };
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Simulate form submission
-        console.log('Form submitted:', formData);
-        setStatus('success');
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        try {
+            await axios.post('http://localhost:5000/api/messages', formData);
+            setStatus('success');
+            // Keep name and email, just clear subject and message
+            setFormData(prev => ({ ...prev, subject: '', message: '' }));
+        } catch (err) {
+            console.error('Failed to send message:', err);
+            // Optionally set error status
+        }
 
         setTimeout(() => setStatus(null), 5000);
     };
@@ -84,7 +117,10 @@ const ContactPage = () => {
                     </div>
 
                     {/* Contact Form */}
-                    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+                    <div
+                        className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 transition-all"
+                        onClickCapture={handleAuthCheck}
+                    >
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send a Message</h2>
                         {status === 'success' && (
                             <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-xl text-green-600 dark:text-green-400 text-sm">
@@ -99,9 +135,8 @@ const ContactPage = () => {
                                         type="text"
                                         name="name"
                                         value={formData.name}
-                                        onChange={handleChange}
-                                        required
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        readOnly
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 cursor-not-allowed focus:outline-none"
                                         placeholder="Your name"
                                     />
                                 </div>
@@ -111,9 +146,8 @@ const ContactPage = () => {
                                         type="email"
                                         name="email"
                                         value={formData.email}
-                                        onChange={handleChange}
-                                        required
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        readOnly
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 cursor-not-allowed focus:outline-none"
                                         placeholder="your@email.com"
                                     />
                                 </div>

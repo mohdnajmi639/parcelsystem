@@ -241,13 +241,90 @@ async function start() {
 
         // ==================== PARCEL ROUTES ====================
 
+        // --- PRICING LOGIC ---
+        const calculatePrice = (parcel) => {
+            let basePrice = 0;
+            let weightCategory = '';
+
+            // 1. Determine Base Price from Categories
+            if (parcel.categories && Array.isArray(parcel.categories)) {
+                if (parcel.categories.includes('1kg')) {
+                    basePrice = 1;
+                    weightCategory = '1kg';
+                } else if (parcel.categories.includes('3kg')) {
+                    basePrice = 2;
+                    weightCategory = '3kg';
+                } else if (parcel.categories.includes('5kg')) {
+                    basePrice = 3;
+                    weightCategory = '5kg';
+                } else if (parcel.categories.includes('Above 5kg')) {
+                    basePrice = 5;
+                    weightCategory = 'Above 5kg';
+                }
+            }
+
+            // Fallback if basePrice was saved directly (for backward compatibility or future proofing)
+            if (parcel.basePrice) {
+                basePrice = parcel.basePrice;
+            }
+
+            // 2. Calculate Overdue Penalty
+            // Rule: If overdue for 1 month, add RM20. Every subsequent month adds another RM20.
+            // "Overdue" effectively starts counting from createdAt (assuming "received at" = createdAt).
+            // Requirement says "if the parcel overdue for 1 month".
+            // Typically "overdue" means uncollected after X days.
+            // Let's assume standard free storage is 30 days.
+            // So on Day 31, it is "overdue for 1 day" -> No penalty yet?
+            // "if the parcel overdue for 1 month" -> implies on Day 60 (30 days free + 30 days overdue)?
+            // OR does it mean "after 1 month of sitting there"?
+            // Usually: Free for 30 days. Day 31 = Penalty.
+            // User wording: "if the parcel overdue for 1 month" -> ambiguous.
+            // Interpretation A: After 1 month in storage (Day 30), price adds RM20.
+            // Interpretation B: After 1 month OVERDUE (Day 60), price adds RM20.
+            // Context "it goes on and on": Monthly recurring.
+            // Let's stick to Interpretation A (Simpler and more standard):
+            // Month 1 (0-30 days): Base Price.
+            // Month 2 (31-60 days): Base + 20.
+            // Month 3 (61-90 days): Base + 40.
+
+            const now = new Date();
+            const created = new Date(parcel.createdAt);
+            const diffTime = Math.abs(now - created);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            let overdueMonths = 0;
+            if (diffDays > 30) {
+                overdueMonths = Math.floor((diffDays - 1) / 30);
+            }
+
+            const overdueCharge = overdueMonths * 20;
+            const totalPrice = basePrice + overdueCharge;
+
+            return {
+                basePrice,
+                overdueCharge,
+                totalPrice,
+                daysHeld: diffDays,
+                weightCategory
+            };
+        };
+
+        // ==================== PARCEL ROUTES ====================
+
         // Fetch all parcels from Atlas (ADMIN ONLY - Returns ALL parcels)
         app.get('/api/parcels', async (req, res) => {
             try {
                 // In a real app, we should check for Admin Token here
                 // For now, we assume this endpoint is only used by Admin Panel
-                const result = await parcels.find({}).sort({ updatedAt: -1, createdAt: -1 }).toArray();
-                res.json(result);
+                const rawParcels = await parcels.find({}).sort({ updatedAt: -1, createdAt: -1 }).toArray();
+
+                // Inject pricing info
+                const results = rawParcels.map(p => {
+                    const pricing = calculatePrice(p);
+                    return { ...p, pricing };
+                });
+
+                res.json(results);
             } catch (err) {
                 res.status(500).json({ error: "Failed to fetch parcels" });
             }
@@ -256,6 +333,9 @@ async function start() {
         // Save a new parcel sent from React
         app.post('/api/parcels', async (req, res) => {
             try {
+                // Calculate base price immediately to freeze it? 
+                // Or just rely on categories. Let's rely on categories for now as it's flexible.
+
                 const newParcel = {
                     ...req.body,
                     status: req.body.status || 'Received',
@@ -348,11 +428,17 @@ async function start() {
         // Get recent parcels (last 5)
         app.get('/api/parcels/recent', async (req, res) => {
             try {
-                const result = await parcels.find({})
+                const rawParcels = await parcels.find({})
                     .sort({ createdAt: -1 })
                     .limit(5)
                     .toArray();
-                res.json(result);
+
+                const results = rawParcels.map(p => {
+                    const pricing = calculatePrice(p);
+                    return { ...p, pricing };
+                });
+
+                res.json(results);
             } catch (err) {
                 res.status(500).json({ error: "Failed to fetch recent parcels" });
             }
@@ -372,7 +458,8 @@ async function start() {
                     return res.status(404).json({ error: "Parcel not found. Please check your tracking number." });
                 }
 
-                res.json(parcel);
+                const pricing = calculatePrice(parcel);
+                res.json({ ...parcel, pricing });
             } catch (err) {
                 res.status(500).json({ error: "Failed to track parcel" });
             }
@@ -396,12 +483,17 @@ async function start() {
                     ]
                 };
 
-                const result = await parcels.find(query)
+                const rawParcels = await parcels.find(query)
                     .sort({ updatedAt: -1 })
                     .toArray();
 
-                console.log(`[GET History] Found ${result.length} parcels`);
-                res.json(result);
+                const results = rawParcels.map(p => {
+                    const pricing = calculatePrice(p);
+                    return { ...p, pricing };
+                });
+
+                console.log(`[GET History] Found ${results.length} parcels`);
+                res.json(results);
             } catch (err) {
                 console.error("Error fetching user history:", err);
                 res.status(500).json({ error: "Failed to fetch parcel history" });
@@ -533,6 +625,85 @@ async function start() {
                 res.json({ message: "Category deleted successfully" });
             } catch (err) {
                 res.status(400).json({ error: "Failed to delete category" });
+            }
+        });
+
+        // --- CONTACT MESSAGES ROUTES ---
+        const messages = db.collection("messages");
+
+        // Submit a new contact message
+        app.post('/api/messages', async (req, res) => {
+            try {
+                const newMessage = {
+                    ...req.body,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+                const result = await messages.insertOne(newMessage);
+                res.status(201).json(result);
+            } catch (err) {
+                res.status(400).json({ error: "Failed to send message" });
+            }
+        });
+
+        // Get all messages (Admin)
+        app.get('/api/messages', async (req, res) => {
+            try {
+                const result = await messages.find({}).sort({ createdAt: -1 }).toArray();
+                res.json(result);
+            } catch (err) {
+                res.status(500).json({ error: "Failed to fetch messages" });
+            }
+        });
+
+        // Delete a message
+        app.delete('/api/messages/:id', async (req, res) => {
+            try {
+                const { id } = req.params;
+                const result = await messages.deleteOne({ _id: new ObjectId(id) });
+                if (result.deletedCount === 0) {
+                    return res.status(404).json({ error: "Message not found" });
+                }
+                res.json({ message: "Message deleted successfully" });
+            } catch (err) {
+                res.status(400).json({ error: "Failed to delete message" });
+            }
+        });
+
+        // Reply to a message (Admin)
+        app.put('/api/messages/:id/reply', async (req, res) => {
+            try {
+                const { id } = req.params;
+                const { replyMessage } = req.body;
+
+                const result = await messages.updateOne(
+                    { _id: new ObjectId(id) },
+                    {
+                        $set: {
+                            replyMessage,
+                            replyDate: new Date(),
+                            status: 'Replied'
+                        }
+                    }
+                );
+
+                if (result.matchedCount === 0) {
+                    return res.status(404).json({ error: "Message not found" });
+                }
+                res.json({ message: "Reply sent successfully" });
+            } catch (err) {
+                res.status(400).json({ error: "Failed to send reply" });
+            }
+        });
+
+        // Get messages by user email (User Dashboard)
+        app.get('/api/messages/user/:email', async (req, res) => {
+            try {
+                const { email } = req.params;
+                const result = await messages.find({ email }).sort({ createdAt: -1 }).toArray();
+                res.json(result);
+            } catch (err) {
+                res.status(500).json({ error: "Failed to fetch messages" });
             }
         });
 

@@ -371,9 +371,9 @@ const HomePage = () => {
             {
                 trackingResult && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-                        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100">
+                        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100 flex flex-col max-h-[85vh]">
                             {/* Header */}
-                            <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-6 text-white relative">
+                            <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-6 text-white relative flex-shrink-0">
                                 <button
                                     onClick={resetTracking}
                                     className="absolute top-4 right-4 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full p-1 transition-colors"
@@ -396,7 +396,7 @@ const HomePage = () => {
                             </div>
 
                             {/* Content */}
-                            <div className="p-6 space-y-6">
+                            <div className="p-6 space-y-6 overflow-y-auto flex-1">
                                 <div className="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-700">
                                     <span className="text-gray-500 dark:text-gray-400 font-medium">Status</span>
                                     <StatusBadge status={trackingResult.status} />
@@ -437,6 +437,29 @@ const HomePage = () => {
                                 <div className="pt-2 text-center text-sm text-gray-500 dark:text-gray-400">
                                     Arrived on: {new Date(trackingResult.createdAt).toLocaleDateString()}
                                 </div>
+
+                                {/* Pricing Detail */}
+                                {trackingResult.pricing && (
+                                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-100 dark:border-gray-600">
+                                        <h4 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-3">Payment Details</h4>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between text-gray-600 dark:text-gray-300">
+                                                <span>Base Price ({trackingResult.pricing.weightCategory || 'Standard'})</span>
+                                                <span>RM {trackingResult.pricing.basePrice.toFixed(2)}</span>
+                                            </div>
+                                            {trackingResult.pricing.overdueCharge > 0 && (
+                                                <div className="flex justify-between text-red-600 dark:text-red-400 font-medium">
+                                                    <span>Overdue Fee ({trackingResult.pricing.daysHeld} days)</span>
+                                                    <span>+ RM {trackingResult.pricing.overdueCharge.toFixed(2)}</span>
+                                                </div>
+                                            )}
+                                            <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-600 flex justify-between font-bold text-lg text-gray-900 dark:text-white">
+                                                <span>Total to Pay</span>
+                                                <span>RM {trackingResult.pricing.totalPrice.toFixed(2)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Payment Section */}
                                 <div className="border-t border-gray-100 dark:border-gray-700 pt-6">
@@ -568,7 +591,7 @@ const HomePage = () => {
                             </div>
 
                             {/* Footer */}
-                            <div className="p-4 bg-gray-50 dark:bg-gray-700/50 flex justify-center">
+                            <div className="p-4 bg-gray-50 dark:bg-gray-700/50 flex justify-center flex-shrink-0">
                                 <button
                                     onClick={resetTracking}
                                     className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium text-sm transition-colors"

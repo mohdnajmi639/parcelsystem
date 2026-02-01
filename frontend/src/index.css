@@ -45,6 +45,23 @@
   }
 }
 
+@layer base {
+
+  /* Custom Scrollbar - Sleek & Minimal */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-600 rounded-full hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors;
+  }
+}
+
 /* Custom Tooltip Styles */
 .tooltip-container {
   position: relative;
