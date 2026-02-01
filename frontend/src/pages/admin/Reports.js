@@ -12,6 +12,7 @@ const Reports = () => {
         overdue: 0,
         totalParcels: 0
     });
+    const [activeCard, setActiveCard] = useState(null);
 
     useEffect(() => {
         fetchData();
@@ -109,65 +110,72 @@ const Reports = () => {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Parcels</p>
-                            <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalParcels}</p>
-                        </div>
-                        <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center">
+                {[
+                    {
+                        title: 'Total Parcels',
+                        value: stats.totalParcels,
+                        icon: (
                             <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                             </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Collection Rate</p>
-                            <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-                                {stats.totalParcels > 0
-                                    ? (((stats.totalParcels - stats.pendingCollection) / stats.totalParcels) * 100).toFixed(0)
-                                    : 0}%
-                            </p>
-                        </div>
-                        <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+                        ),
+                        bgIcon: 'bg-primary-100 dark:bg-primary-900/30',
+                        textColor: 'text-gray-900 dark:text-white',
+                        ringColor: 'ring-primary-500'
+                    },
+                    {
+                        title: 'Collection Rate',
+                        value: `${stats.totalParcels > 0 ? (((stats.totalParcels - stats.pendingCollection) / stats.totalParcels) * 100).toFixed(0) : 0}%`,
+                        icon: (
                             <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Pending</p>
-                            <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">{stats.pendingCollection}</p>
-                        </div>
-                        <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center">
+                        ),
+                        bgIcon: 'bg-green-100 dark:bg-green-900/30',
+                        textColor: 'text-green-600 dark:text-green-400',
+                        ringColor: 'ring-green-500'
+                    },
+                    {
+                        title: 'Pending',
+                        value: stats.pendingCollection,
+                        icon: (
                             <svg className="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Overdue</p>
-                            <p className="text-3xl font-bold text-red-600 dark:text-red-400">{stats.overdue}</p>
-                        </div>
-                        <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center">
+                        ),
+                        bgIcon: 'bg-amber-100 dark:bg-amber-900/30',
+                        textColor: 'text-amber-600 dark:text-amber-400',
+                        ringColor: 'ring-amber-500'
+                    },
+                    {
+                        title: 'Overdue',
+                        value: stats.overdue,
+                        icon: (
                             <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
+                        ),
+                        bgIcon: 'bg-red-100 dark:bg-red-900/30',
+                        textColor: 'text-red-600 dark:text-red-400',
+                        ringColor: 'ring-red-500'
+                    }
+                ].map((card, index) => (
+                    <div
+                        key={index}
+                        className={`bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 cursor-pointer hover:shadow-xl transition-all duration-300 ${activeCard === index ? `ring-2 ${card.ringColor}` : ''}`}
+                        onClick={() => setActiveCard(activeCard === index ? null : index)}
+                    >
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{card.title}</p>
+                                <p className={`text-3xl font-bold ${card.textColor}`}>{card.value}</p>
+                            </div>
+                            <div className={`w-12 h-12 ${card.bgIcon} rounded-xl flex items-center justify-center`}>
+                                {card.icon}
+                            </div>
                         </div>
                     </div>
-                </div>
+                ))}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

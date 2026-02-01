@@ -13,6 +13,7 @@ const Dashboard = () => {
     });
     const [recentParcels, setRecentParcels] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [activeCard, setActiveCard] = useState(null);
 
     useEffect(() => {
         fetchData();
@@ -45,7 +46,8 @@ const Dashboard = () => {
             color: 'blue',
             bgColor: 'bg-blue-500',
             lightBg: 'bg-blue-50 dark:bg-blue-900/20',
-            textColor: 'text-blue-600 dark:text-blue-400'
+            textColor: 'text-blue-600 dark:text-blue-400',
+            ringColor: 'ring-blue-500'
         },
         {
             title: 'Pending Collection',
@@ -58,7 +60,8 @@ const Dashboard = () => {
             color: 'yellow',
             bgColor: 'bg-amber-500',
             lightBg: 'bg-amber-50 dark:bg-amber-900/20',
-            textColor: 'text-amber-600 dark:text-amber-400'
+            textColor: 'text-amber-600 dark:text-amber-400',
+            ringColor: 'ring-amber-500'
         },
         {
             title: 'Overdue / Unclaimed',
@@ -71,7 +74,8 @@ const Dashboard = () => {
             color: 'red',
             bgColor: 'bg-red-500',
             lightBg: 'bg-red-50 dark:bg-red-900/20',
-            textColor: 'text-red-600 dark:text-red-400'
+            textColor: 'text-red-600 dark:text-red-400',
+            ringColor: 'ring-red-500'
         },
         {
             title: 'Total Parcels',
@@ -84,7 +88,8 @@ const Dashboard = () => {
             color: 'green',
             bgColor: 'bg-emerald-500',
             lightBg: 'bg-emerald-50 dark:bg-emerald-900/20',
-            textColor: 'text-emerald-600 dark:text-emerald-400'
+            textColor: 'text-emerald-600 dark:text-emerald-400',
+            ringColor: 'ring-emerald-500'
         }
     ];
 
@@ -130,7 +135,8 @@ const Dashboard = () => {
                 {statsCards.map((card, index) => (
                     <div
                         key={index}
-                        className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700"
+                        className={`bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer ${activeCard === index ? `ring-2 ${card.ringColor}` : ''}`}
+                        onClick={() => setActiveCard(activeCard === index ? null : index)}
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div className={`p-3 rounded-xl ${card.lightBg}`}>

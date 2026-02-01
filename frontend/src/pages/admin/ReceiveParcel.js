@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -17,16 +17,19 @@ const ReceiveParcel = () => {
         shelfLocation: ''
     });
 
-    const couriers = [
-        'J&T Express',
-        'Pos Laju',
-        'DHL',
-        'FedEx',
-        'Ninja Van',
-        'Shopee Express',
-        'Lazada Express',
-        'Other'
-    ];
+    const [couriers, setCouriers] = useState([]);
+
+    useEffect(() => {
+        const fetchCouriers = async () => {
+            try {
+                const res = await axios.get(`${API_URL}/couriers`);
+                setCouriers(res.data.map(c => c.name));
+            } catch (error) {
+                console.error('Failed to fetch couriers:', error);
+            }
+        };
+        fetchCouriers();
+    }, []);
 
     const categoryOptions = [
         { group: 'Weight', items: ['1kg', '3kg', '5kg', 'Above 5kg'], color: 'purple' },

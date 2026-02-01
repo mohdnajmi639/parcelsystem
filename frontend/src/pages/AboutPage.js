@@ -4,7 +4,7 @@ const AboutPage = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Hero Section with Video Background */}
-            <div className="relative overflow-hidden text-white py-20 px-4 sm:px-6 lg:px-8 mb-12 h-[500px] flex items-center justify-center -mt-20">
+            <div className="relative overflow-hidden text-white py-20 px-4 sm:px-6 lg:px-8 mb-12 h-[400px] flex items-center justify-center">
                 {/* YouTube Video Background */}
                 <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
                     <iframe
@@ -19,7 +19,7 @@ const AboutPage = () => {
                 {/* Dark Overlay */}
                 <div className="absolute inset-0 bg-black/60"></div>
                 {/* Content */}
-                <div className="relative z-10 max-w-7xl mx-auto text-center pt-20">
+                <div className="relative z-10 max-w-7xl mx-auto text-center">
                     <h1 className="text-4xl md:text-5xl font-bold mb-6">About JasHub</h1>
                     <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
                         We are revolutionizing campus logistics with smart, secure, and seamless parcel tracking solutions.
