@@ -151,66 +151,72 @@ const HomePage = () => {
             )}
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-                {/* Background Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white via-primary-50/30 to-white dark:from-gray-900 dark:via-primary-900/10 dark:to-gray-900"></div>
-
                 <div className="max-w-7xl mx-auto relative">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         {/* Left Content */}
-                        <div className="z-10">
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight mb-6">
-                                <span className="text-gradient">Jasmine Hub</span> UiTM Puncak Perdana Parcel Tracking System
+                        <div className="z-10 relative">
+                            <div className="absolute -top-20 -left-20 w-32 h-32 bg-primary-500/10 rounded-full blur-2xl animate-pulse"></div>
+
+                            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white leading-tight mb-6 tracking-tight">
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-purple-500 text-glow">Jasmine Hub</span>
+                                <br />
+                                <span className="text-3xl sm:text-4xl lg:text-5xl font-medium text-gray-400">Parcel Tracking System</span>
                             </h1>
 
-                            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg">
-                                Track and claim all your parcels in one place.
+                            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed">
+                                UiTM Puncak Perdana's official student hub. Track, manage, and claim all your parcels in one centralized platform.
                             </p>
 
                             <div className="w-full max-w-lg mb-12">
-                                <form onSubmit={handleTrack} className="flex items-center p-2 bg-white dark:bg-gray-800 rounded-full shadow-2xl border border-gray-100 dark:border-gray-700 relative z-20 transition-all hover:shadow-3xl focus-within:ring-4 focus-within:ring-primary-100 dark:focus-within:ring-primary-900/30">
-                                    <div className="flex-1 relative">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                            </svg>
+                                <div className="glass p-2 rounded-full shadow-2xl relative z-20 transition-all duration-300 hover:shadow-primary-500/20 group">
+                                    <form onSubmit={handleTrack} className="flex items-center">
+                                        <div className="flex-1 relative">
+                                            <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                                                <svg className="h-6 w-6 text-gray-400 group-focus-within:text-primary-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                </svg>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                value={trackingNumber}
+                                                onChange={(e) => setTrackingNumber(e.target.value)}
+                                                className="w-full pl-14 pr-4 py-4 bg-transparent border-none focus:ring-0 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-lg outline-none font-medium"
+                                                placeholder="Enter Tracking Number..."
+                                            />
                                         </div>
-                                        <input
-                                            type="text"
-                                            value={trackingNumber}
-                                            onChange={(e) => setTrackingNumber(e.target.value)}
-                                            className="w-full pl-12 pr-4 py-3 bg-transparent border-none focus:ring-0 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-lg outline-none"
-                                            placeholder="Enter Tracking Number"
-                                        />
-                                    </div>
-                                    <button
-                                        type="submit"
-                                        disabled={loading}
-                                        className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full transition duration-200 shadow-md whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
-                                    >
-                                        {loading ? 'Searching...' : 'Track Parcel'}
-                                    </button>
-                                </form>
-                                <div className="mt-4 flex flex-col pl-4 pr-2">
+                                        <button
+                                            type="submit"
+                                            disabled={loading}
+                                            className="bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-bold py-4 px-8 rounded-full transition-all duration-200 shadow-lg hover:shadow-primary-500/30 whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed transform active:scale-95"
+                                        >
+                                            {loading ? 'Searching...' : 'Track Now'}
+                                        </button>
+                                    </form>
+                                </div>
+                                <div className="mt-4 flex flex-col pl-6 pr-2">
                                     {error ? (
-                                        <p className="text-red-500 font-medium animate-pulse">{error}</p>
+                                        <p className="text-red-500 font-medium animate-pulse flex items-center">
+                                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                            {error}
+                                        </p>
                                     ) : (
                                         <p className="text-gray-500 dark:text-gray-400 text-sm">
-                                            Note: Please copy and paste the tracking number or enter the full number above.
+                                            Enter the full tracking number provided by your courier.
                                         </p>
                                     )}
                                 </div>
                             </div>
 
                             {/* Trusted By Section */}
-                            <div className="pt-8 border-t border-gray-100 dark:border-gray-800">
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Trusted by leading carriers</p>
-                                <div className="flex flex-wrap items-center gap-6">
+                            <div className="pt-8 border-t border-gray-200/50 dark:border-white/10">
+                                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-widest">Trusted by leading carriers</p>
+                                <div className="flex flex-wrap items-center gap-8 opacity-70 hover:opacity-100 transition-opacity duration-300">
                                     {partners.map((partner, index) => (
                                         <div
                                             key={index}
-                                            className="flex items-center space-x-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                            className="flex items-center space-x-2 text-gray-400 dark:text-gray-500 hover:text-primary-500 dark:hover:text-primary-400 transition-colors cursor-default"
                                         >
-                                            <span className="text-2xl">{partner.icon}</span>
+                                            <span className="text-2xl filter grayscale hover:grayscale-0 transition-all">{partner.icon}</span>
                                             <span className="font-semibold text-sm">{partner.name}</span>
                                         </div>
                                     ))}
@@ -219,65 +225,66 @@ const HomePage = () => {
                         </div>
 
                         {/* Right Graphics */}
-                        <div className="hidden lg:block">
-                            <HeroGraphics />
+                        <div className="hidden lg:block relative">
+                            <div className="absolute -inset-4 bg-gradient-to-r from-primary-500 to-purple-600 rounded-[2rem] blur-2xl opacity-20 animate-pulse"></div>
+                            <div className="relative glass rounded-[2rem] p-4 border border-white/20">
+                                <HeroGraphics />
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                {/* Decorative Elements */}
-                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent dark:from-gray-900"></div>
             </section>
 
-            {/* Features Preview Section */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50">
+            {/* Features Preview Section - Bento Grid */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 relative">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                            Everything you need to manage parcels
+                    <div className="text-center mb-16 relative z-10">
+                        <span className="text-primary-500 font-semibold tracking-wider uppercase text-sm mb-2 block">Why Choose JasHub?</span>
+                        <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 text-glow">
+                            Smart Parcel Management
                         </h2>
                         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                            A complete solution for UiTM Puncak Perdana College Students
+                            Designed specifically for the students of UiTM Puncak Perdana.
                         </p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
                         {/* Feature 1 */}
-                        <div className="card group hover:-translate-y-2">
-                            <div className="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary-500 transition-colors">
-                                <svg className="w-7 h-7 text-primary-500 dark:text-primary-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="glass p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 group">
+                            <div className="w-16 h-16 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform">
+                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Track Parcels</h3>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                Real-time tracking with instant notifications when your parcel arrives.
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">Real-time Tracking</h3>
+                            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                Never lose sight of your deliveries. Get instant status updates from arrival to collection.
                             </p>
                         </div>
 
                         {/* Feature 2 */}
-                        <div className="card group hover:-translate-y-2">
-                            <div className="w-14 h-14 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-500 transition-colors">
-                                <svg className="w-7 h-7 text-green-500 dark:text-green-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="glass p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 group">
+                            <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Claim Easily</h3>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                Simple one-click claiming process with digital signatures.
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">Easy Claiming</h3>
+                            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                Streamlined process. Digital verification makes picking up your parcels quicker than ever.
                             </p>
                         </div>
 
                         {/* Feature 3 */}
-                        <div className="card group hover:-translate-y-2">
-                            <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:bg-purple-500 transition-colors">
-                                <svg className="w-7 h-7 text-purple-500 dark:text-purple-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="glass p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 group">
+                            <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                 </svg>
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">User Dashboard</h3>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                Comprehensive dashboard for users to track and claim all parcels.
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">User Dashboard</h3>
+                            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                Access your personal history. View past collections and pending items in one secure dashboard.
                             </p>
                         </div>
                     </div>
@@ -285,31 +292,26 @@ const HomePage = () => {
             </section>
 
             {/* Stats Section */}
-            <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-                {/* Background Image */}
-                <div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: "url('/images/banner/home.jpg')" }}
-                />
-                {/* Overlay for better text readability */}
-                <div className="absolute inset-0 bg-black/30" />
+            <section className="relative py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-                        <div>
-                            <p className="text-4xl sm:text-5xl font-bold text-white mb-2">5K+</p>
-                            <p className="text-gray-200">Parcels Tracked</p>
-                        </div>
-                        <div>
-                            <p className="text-4xl sm:text-5xl font-bold text-white mb-2">99.9%</p>
-                            <p className="text-gray-200">Uptime</p>
-                        </div>
-                        <div>
-                            <p className="text-4xl sm:text-5xl font-bold text-white mb-2">500+</p>
-                            <p className="text-gray-200">Active Users</p>
-                        </div>
-                        <div>
-                            <p className="text-4xl sm:text-5xl font-bold text-white mb-2">24/7</p>
-                            <p className="text-gray-200">Support</p>
+                    <div className="glass rounded-[2.5rem] p-12 border border-white/10 bg-gray-900/50 backdrop-blur-md">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+                            <div className="group">
+                                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 mb-2 group-hover:scale-110 transition-transform duration-300">5K+</p>
+                                <p className="text-primary-400 font-medium tracking-wide uppercase text-sm">Parcels Tracked</p>
+                            </div>
+                            <div className="group">
+                                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 mb-2 group-hover:scale-110 transition-transform duration-300">99%</p>
+                                <p className="text-emerald-400 font-medium tracking-wide uppercase text-sm">Satisfaction Rate</p>
+                            </div>
+                            <div className="group">
+                                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 mb-2 group-hover:scale-110 transition-transform duration-300">500+</p>
+                                <p className="text-blue-400 font-medium tracking-wide uppercase text-sm">Active Students</p>
+                            </div>
+                            <div className="group">
+                                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 mb-2 group-hover:scale-110 transition-transform duration-300">24/7</p>
+                                <p className="text-purple-400 font-medium tracking-wide uppercase text-sm">System Uptime</p>
+                            </div>
                         </div>
                     </div>
                 </div>

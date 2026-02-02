@@ -174,96 +174,7 @@ const ManageUsers = () => {
         );
     }
 
-    const UserForm = ({ onSubmit, submitText }) => (
-        <form onSubmit={onSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
-                    <input
-                        type="text"
-                        value={formData.fullName}
-                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email *</label>
-                    <input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    />
-                </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Student ID</label>
-                    <input
-                        type="text"
-                        value={formData.studentId}
-                        onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
-                        placeholder="e.g., STU12345"
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
-                    <input
-                        type="text"
-                        value={formData.phoneNumber}
-                        onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                        placeholder="e.g., 012-3456789"
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    />
-                </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password {submitText === 'Save Changes' ? '(Leave blank to keep)' : '*'}</label>
-                    <input
-                        type="password"
-                        value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        required={submitText !== 'Save Changes'}
-                        placeholder={submitText === 'Save Changes' ? '********' : 'Enter password'}
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Role</label>
-                    <select
-                        value={formData.role}
-                        onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent cursor-pointer"
-                    >
-                        <option value="student">Student</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-            </div>
-
-            <div className="flex space-x-3 pt-4">
-                <button
-                    type="button"
-                    onClick={() => { setAddModal(false); setEditModal({ open: false, user: null }); resetForm(); }}
-                    className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                >
-                    Cancel
-                </button>
-                <button
-                    type="submit"
-                    className="flex-1 px-4 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-colors"
-                >
-                    {submitText}
-                </button>
-            </div>
-        </form>
-    );
 
     return (
         <div className="p-8">
@@ -553,7 +464,13 @@ const ManageUsers = () => {
                                     </svg>
                                 </button>
                             </div>
-                            <UserForm onSubmit={handleAddUser} submitText="Add User" />
+                            <UserForm
+                                onSubmit={handleAddUser}
+                                submitText="Add User"
+                                formData={formData}
+                                setFormData={setFormData}
+                                onCancel={() => { setAddModal(false); resetForm(); }}
+                            />
                         </div>
                     </div>
                 )
@@ -579,7 +496,13 @@ const ManageUsers = () => {
                                     </svg>
                                 </button>
                             </div>
-                            <UserForm onSubmit={handleEditUser} submitText="Save Changes" />
+                            <UserForm
+                                onSubmit={handleEditUser}
+                                submitText="Save Changes"
+                                formData={formData}
+                                setFormData={setFormData}
+                                onCancel={() => { setEditModal({ open: false, user: null }); resetForm(); }}
+                            />
                         </div>
                     </div>
                 )
@@ -680,5 +603,96 @@ const ManageUsers = () => {
         </div >
     );
 };
+
+const UserForm = ({ formData, setFormData, onSubmit, submitText, onCancel }) => (
+    <form onSubmit={onSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+            <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
+                <input
+                    type="text"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+            </div>
+            <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email *</label>
+                <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+            </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+            <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Student ID</label>
+                <input
+                    type="text"
+                    value={formData.studentId}
+                    onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
+                    placeholder="e.g., STU12345"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+            </div>
+            <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
+                <input
+                    type="text"
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                    placeholder="e.g., 012-3456789"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+            </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+            <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password {submitText === 'Save Changes' ? '(Leave blank to keep)' : '*'}</label>
+                <input
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    required={submitText !== 'Save Changes'}
+                    placeholder={submitText === 'Save Changes' ? '********' : 'Enter password'}
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+            </div>
+            <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Role</label>
+                <select
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent cursor-pointer"
+                >
+                    <option value="student">Student</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+        </div>
+
+        <div className="flex space-x-3 pt-4">
+            <button
+                type="button"
+                onClick={onCancel}
+                className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+                Cancel
+            </button>
+            <button
+                type="submit"
+                className="flex-1 px-4 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-colors"
+            >
+                {submitText}
+            </button>
+        </div>
+    </form>
+);
 
 export default ManageUsers;

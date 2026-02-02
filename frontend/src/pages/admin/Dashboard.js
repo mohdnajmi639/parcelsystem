@@ -123,102 +123,148 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="p-8">
+        <div className="p-8 max-w-7xl mx-auto space-y-8">
             {/* Header */}
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Dashboard</h1>
-                <p className="text-gray-600 dark:text-gray-400">Welcome back! Here's an overview of today's parcel activity.</p>
+            <div>
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 text-glow">Dashboard</h1>
+                <p className="text-gray-600 dark:text-gray-300">Welcome back! Here's your parcel activity overview.</p>
             </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                {statsCards.map((card, index) => (
-                    <div
-                        key={index}
-                        className={`glass rounded-2xl p-6 hover:shadow-2xl transition-all duration-300 border-none cursor-pointer ${activeCard === index ? `ring-2 ${card.ringColor}` : ''}`}
-                        onClick={() => setActiveCard(activeCard === index ? null : index)}
-                    >
-                        <div className="flex items-center justify-between mb-4">
-                            <div className={`p-3 rounded-xl ${card.lightBg}`}>
-                                <span className={card.textColor}>{card.icon}</span>
-                            </div>
-                            <span className={`text-4xl font-bold ${card.textColor}`}>{card.value}</span>
+            {/* Bento Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+                {/* 1. Quick Action Card (Col-span-8) */}
+                <div className="col-span-12 md:col-span-12 lg:col-span-8 relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-500 to-primary-600 shadow-2xl hover:shadow-primary-500/30 transition-all duration-300 group cursor-pointer"
+                    onClick={() => document.getElementById('add-parcel-link').click()}>
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 transform transition-transform group-hover:scale-110"></div>
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full blur-2xl -ml-10 -mb-10"></div>
+
+                    <div className="relative p-8 h-full flex flex-col justify-between items-start">
+                        <div>
+                            <h2 className="text-3xl font-bold text-white mb-2">Ready to receive?</h2>
+                            <p className="text-blue-100 max-w-md text-lg">Scan a new parcel and add it to the system instantly.</p>
                         </div>
-                        <h3 className="text-gray-600 dark:text-gray-400 font-medium">{card.title}</h3>
-                    </div>
-                ))}
-            </div>
-
-            {/* Quick Action Button */}
-            <div className="mb-8">
-                <Link
-                    to="/admin/receive"
-                    className="inline-flex items-center space-x-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold py-4 px-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span className="text-lg">Scan / Add New Parcel</span>
-                </Link>
-            </div>
-
-            {/* Recent Activity Table */}
-            <div className="glass rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
-                <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>
                         <Link
-                            to="/admin/parcels"
-                            className="text-primary-500 hover:text-primary-600 font-medium text-sm flex items-center space-x-1"
+                            id="add-parcel-link"
+                            to="/admin/receive"
+                            className="mt-6 inline-flex items-center space-x-2 bg-white text-primary-600 font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-gray-50 transition-colors"
                         >
-                            <span>View All</span>
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                             </svg>
+                            <span>Receive Parcel</span>
                         </Link>
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-gray-50 dark:bg-gray-700/50">
-                            <tr>
-                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tracking #</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Student</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Courier</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                            {recentParcels.length > 0 ? (
-                                recentParcels.map((parcel) => (
-                                    <tr key={parcel._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
-                                        <td className="px-6 py-4">
-                                            <span className="font-mono text-sm text-gray-900 dark:text-white">{parcel.trackingNumber}</span>
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{parcel.studentName}</td>
-                                        <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{parcel.courier}</td>
-                                        <td className="px-6 py-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadge(parcel.status)}`}>
-                                                {parcel.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-500 dark:text-gray-400 text-sm">{formatDate(parcel.createdAt)}</td>
-                                    </tr>
-                                ))
-                            ) : (
+                {/* 2. Total Parcels Card (Col-span-4) */}
+                <div className="col-span-12 md:col-span-6 lg:col-span-4 glass rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-50 group-hover:opacity-100 transition-opacity">
+                        <div className="p-3 bg-emerald-500/20 rounded-2xl text-emerald-500">
+                            {statsCards[3].icon}
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-gray-500 dark:text-gray-400 font-medium mb-1">Total Parcels</p>
+                        <h3 className="text-5xl font-bold text-gray-900 dark:text-white">{statsCards[3].value}</h3>
+                    </div>
+                    <div className="mt-4">
+                        <span className="text-emerald-500 font-medium flex items-center text-sm">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                            Updated just now
+                        </span>
+                    </div>
+                </div>
+
+                {/* 3. Sub Stats (3 Columns) */}
+                {statsCards.slice(0, 3).map((card, index) => (
+                    <div
+                        key={index}
+                        className={`col-span-12 md:col-span-4 glass rounded-3xl p-6 transition-all duration-300 hover:bg-white/20 dark:hover:bg-gray-800/60 group cursor-pointer ${activeCard === index ? `ring-2 ${card.ringColor}` : ''}`}
+                        onClick={() => setActiveCard(activeCard === index ? null : index)}
+                    >
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <p className="text-gray-500 dark:text-gray-400 font-medium text-sm mb-1">{card.title}</p>
+                                <h3 className={`text-3xl font-bold ${card.textColor}`}>{card.value}</h3>
+                            </div>
+                            <div className={`p-3 rounded-2xl ${card.lightBg} group-hover:scale-110 transition-transform duration-300`}>
+                                <span className={card.textColor}>{card.icon}</span>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+
+                {/* 4. Recent Activity Table (Full Width) */}
+                <div className="col-span-12 glass rounded-3xl border border-white/20 dark:border-gray-700/50 overflow-hidden">
+                    <div className="p-6 border-b border-white/10 dark:border-gray-700/50 flex items-center justify-between">
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Latest parcels added to the system</p>
+                        </div>
+                        <Link
+                            to="/admin/parcels"
+                            className="bg-white/50 dark:bg-gray-700/50 hover:bg-white dark:hover:bg-gray-700 text-primary-600 dark:text-primary-400 px-4 py-2 rounded-xl font-medium text-sm transition-all"
+                        >
+                            View All
+                        </Link>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-gray-50/50 dark:bg-gray-800/50">
                                 <tr>
-                                    <td colSpan="5" className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                                        <svg className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                        </svg>
-                                        <p>No parcels yet. Add your first parcel!</p>
-                                    </td>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tracking #</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Student</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Courier</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-gray-100/50 dark:divide-gray-700/50">
+                                {recentParcels.length > 0 ? (
+                                    recentParcels.map((parcel) => (
+                                        <tr key={parcel._id} className="hover:bg-primary-50/30 dark:hover:bg-primary-900/10 transition-colors">
+                                            <td className="px-6 py-4">
+                                                <span className="font-mono text-sm font-semibold text-gray-900 dark:text-white">{parcel.trackingNumber}</span>
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{parcel.studentName}</td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center space-x-2">
+                                                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                                                    <span className="text-gray-600 dark:text-gray-300">{parcel.courier}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${parcel.status === 'Received' ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800' :
+                                                    parcel.status === 'Collected' ? 'bg-green-50 text-green-600 border-green-200 dark:bg-green-900/20 dark:border-green-800' :
+                                                        'bg-gray-50 text-gray-600 border-gray-200'
+                                                    }`}>
+                                                    {parcel.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-500 dark:text-gray-400 text-sm">{formatDate(parcel.createdAt)}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="5" className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                                            <div className="flex flex-col items-center justify-center">
+                                                <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                                                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                                    </svg>
+                                                </div>
+                                                <p className="text-lg font-medium">No parcels yet</p>
+                                                <p className="text-sm">Add your first parcel to get started!</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

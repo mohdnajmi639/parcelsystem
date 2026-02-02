@@ -152,14 +152,17 @@ const AdminLayout = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex relative overflow-hidden">
             {/* Background Decorations */}
-            <div className="absolute inset-0 z-0 pointer-events-none">
-                <div className="absolute inset-0 bg-dot-pattern text-gray-300 dark:text-gray-800 opacity-80"></div>
-                {/* Gradient Blobs */}
-                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-primary-400/30 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen opacity-90 animate-blob"></div>
-                <div className="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-purple-400/30 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen opacity-90 animate-blob animation-delay-2000"></div>
+            {/* Background Decorations - Aurora Effect */}
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+                <div className="absolute inset-0 bg-dot-pattern text-slate-300 dark:text-slate-800/30 opacity-50"></div>
+
+                {/* Aurora Beams */}
+                <div className="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] rounded-full bg-gradient-to-r from-cyan-400/20 via-blue-500/20 to-purple-600/20 blur-[130px] animate-blob mix-blend-screen"></div>
+                <div className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full bg-gradient-to-r from-purple-400/20 via-fuchsia-500/20 to-pink-600/20 blur-[130px] animate-blob animation-delay-2000 mix-blend-screen"></div>
+                <div className="absolute -bottom-[20%] left-[20%] w-[50%] h-[50%] rounded-full bg-gradient-to-r from-blue-400/20 via-teal-500/20 to-emerald-600/20 blur-[130px] animate-blob animation-delay-4000 mix-blend-screen"></div>
             </div>
             {/* Sidebar */}
-            <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col`}>
+            <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col relative z-20`}>
                 {/* Logo */}
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">

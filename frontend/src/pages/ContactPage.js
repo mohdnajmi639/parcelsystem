@@ -57,7 +57,7 @@ const ContactPage = () => {
     };
 
     return (
-        <div className="min-h-screen pt-20">
+        <div className="min-h-screen pt-16">
             <div className="relative text-white py-16 px-4 mb-12 overflow-hidden">
                 {/* Background Image */}
                 <div
