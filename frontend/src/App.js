@@ -1,26 +1,56 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import PublicLayout from './components/PublicLayout';
+import AdminLayout from './components/AdminLayout';
 import HomePage from './pages/HomePage';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
+import UserDashboard from './pages/UserDashboard';
+import SettingsPage from './pages/SettingsPage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import FAQPage from './pages/FAQPage';
+import Dashboard from './pages/admin/Dashboard';
+import ReceiveParcel from './pages/admin/ReceiveParcel';
+import ManageParcels from './pages/admin/ManageParcels';
+import ManageUsers from './pages/admin/ManageUsers';
+import ManageCategories from './pages/admin/ManageCategories';
+import ManageCouriers from './pages/admin/ManageCouriers';
+import ManageContactMessages from './pages/admin/ManageContactMessages';
+import Reports from './pages/admin/Reports';
 import './index.css';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-white">
-        <Navbar />
-        <Routes>
+      <Routes>
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="receive" element={<ReceiveParcel />} />
+          <Route path="parcels" element={<ManageParcels />} />
+          <Route path="users" element={<ManageUsers />} />
+          <Route path="categories" element={<ManageCategories />} />
+          <Route path="couriers" element={<ManageCouriers />} />
+          <Route path="contact-messages" element={<ManageContactMessages />} />
+          <Route path="reports" element={<Reports />} />
+        </Route>
+
+        {/* Public Routes */}
+        <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
-          {/* Placeholder routes for future pages */}
-          <Route path="/login" element={<PlaceholderPage title="Sign In" />} />
-          <Route path="/register" element={<PlaceholderPage title="Sign Up" />} />
-          <Route path="/tracking" element={<PlaceholderPage title="Track Parcel" />} />
-          <Route path="/services" element={<PlaceholderPage title="Services" />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+
           <Route path="/pricing" element={<PlaceholderPage title="Pricing" />} />
-          <Route path="/contact" element={<PlaceholderPage title="Contact" />} />
           <Route path="/features" element={<PlaceholderPage title="Features" />} />
-        </Routes>
-      </div>
+        </Route>
+      </Routes>
     </Router>
   );
 }
