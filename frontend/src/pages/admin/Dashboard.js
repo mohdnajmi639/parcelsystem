@@ -95,10 +95,10 @@ const Dashboard = () => {
 
     const getStatusBadge = (status) => {
         const statusStyles = {
-            'Received': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-            'Collected': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+            'Received': 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800',
+            'Collected': 'bg-green-50 text-green-600 border-green-200 dark:bg-green-900/20 dark:border-green-800'
         };
-        return statusStyles[status] || 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
+        return statusStyles[status] || 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-800/20 dark:text-gray-400';
     };
 
     const formatDate = (dateString) => {
@@ -237,10 +237,7 @@ const Dashboard = () => {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${parcel.status === 'Received' ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800' :
-                                                    parcel.status === 'Collected' ? 'bg-green-50 text-green-600 border-green-200 dark:bg-green-900/20 dark:border-green-800' :
-                                                        'bg-gray-50 text-gray-600 border-gray-200'
-                                                    }`}>
+                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusBadge(parcel.status)}`}>
                                                     {parcel.status}
                                                 </span>
                                             </td>
