@@ -17,24 +17,31 @@ const ReceiveParcel = () => {
         shelfLocation: ''
     });
 
+    const [availableCategories, setAvailableCategories] = useState([]);
+
     const [couriers, setCouriers] = useState([]);
 
     useEffect(() => {
-        const fetchCouriers = async () => {
+        const fetchData = async () => {
             try {
-                const res = await axios.get(`${API_URL}/couriers`);
-                setCouriers(res.data.map(c => c.name));
+                const [couriersRes, categoriesRes] = await Promise.all([
+                    axios.get(`${API_URL}/couriers`),
+                    axios.get(`${API_URL}/categories`)
+                ]);
+                setCouriers(couriersRes.data.map(c => c.name));
+                setAvailableCategories(categoriesRes.data);
             } catch (error) {
-                console.error('Failed to fetch couriers:', error);
+                console.error('Failed to fetch data:', error);
             }
         };
-        fetchCouriers();
+        fetchData();
     }, []);
 
-    const categoryOptions = [
-        { group: 'Weight', items: ['1kg', '3kg', '5kg', 'Above 5kg'], color: 'purple' },
-        { group: 'Month', items: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], color: 'blue' },
-        { group: 'Parcel Type', items: ['Fragile', 'Electronics', 'General'], color: 'orange' }
+    // Group categories
+    const categoryGroups = [
+        { name: 'Weight', items: availableCategories.filter(c => c.group === 'Weight') },
+        { name: 'Month', items: availableCategories.filter(c => c.group === 'Month') },
+        { name: 'Parcel Type', items: availableCategories.filter(c => c.group === 'Parcel Type') }
     ];
 
 
@@ -221,26 +228,30 @@ const ReceiveParcel = () => {
                         <div className="border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 overflow-hidden">
                             <table className="w-full">
                                 <tbody>
-                                    {categoryOptions.map((group, idx) => (
-                                        <tr key={group.group} className={idx !== categoryOptions.length - 1 ? 'border-b border-gray-200 dark:border-gray-600' : ''}>
+                                    {categoryGroups.map((group, idx) => (
+                                        <tr key={group.name} className={idx !== categoryGroups.length - 1 ? 'border-b border-gray-200 dark:border-gray-600' : ''}>
                                             <td className="px-4 py-3 w-32 bg-gray-100 dark:bg-gray-700/70">
-                                                <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">{group.group}</span>
+                                                <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">{group.name}</span>
                                             </td>
                                             <td className="px-4 py-3">
                                                 <div className="flex flex-wrap gap-2">
-                                                    {group.items.map((item) => (
-                                                        <button
-                                                            key={item}
-                                                            type="button"
-                                                            onClick={() => handleCategoryToggle(item)}
-                                                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${getColorClasses(group.color, formData.categories.includes(item))}`}
-                                                        >
-                                                            {formData.categories.includes(item) && (
-                                                                <span className="mr-1">✓</span>
-                                                            )}
-                                                            {item}
-                                                        </button>
-                                                    ))}
+                                                    {group.items.length > 0 ? (
+                                                        group.items.map((item) => (
+                                                            <button
+                                                                key={item._id}
+                                                                type="button"
+                                                                onClick={() => handleCategoryToggle(item.name)}
+                                                                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${getColorClasses(item.color, formData.categories.includes(item.name))}`}
+                                                            >
+                                                                {formData.categories.includes(item.name) && (
+                                                                    <span className="mr-1">✓</span>
+                                                                )}
+                                                                {item.name}
+                                                            </button>
+                                                        ))
+                                                    ) : (
+                                                        <span className="text-gray-400 text-sm italic">No options available</span>
+                                                    )}
                                                 </div>
                                             </td>
                                         </tr>
