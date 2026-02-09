@@ -60,19 +60,19 @@ const AboutPage = () => {
                 <div className="mb-20">
                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white text-center mb-12">Meet the Team</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {/* Team Member 1 - Mr. Najmi */}
+                        {/* Team Member 1 - Mr. Megat */}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 group hover:shadow-xl transition-shadow">
                             <div className="h-80 bg-gray-200 dark:bg-gray-700 overflow-hidden">
                                 <img
-                                    src="/images/team/mr-najmi.png"
-                                    alt="Mr. Najmi"
+                                    src="/images/team/mr-megat.png"
+                                    alt="Mr. Megat"
                                     className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                                 />
                             </div>
                             <div className="p-6 text-center">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Mr. Najmi</h3>
-                                <p className="text-primary-600 font-medium mb-3">CEO & Founder</p>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm">Leading the vision and strategic direction of JasHub.</p>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Megat Naufal</h3>
+                                <p className="text-primary-600 font-medium mb-3">Project Manager</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">Oversees timeline and scope.</p>
                             </div>
                         </div>
 
@@ -86,25 +86,25 @@ const AboutPage = () => {
                                 />
                             </div>
                             <div className="p-6 text-center">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Mr. Amsyar</h3>
-                                <p className="text-primary-600 font-medium mb-3">System Developer</p>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm">Building robust and scalable systems for seamless operations.</p>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Amir Amsyar</h3>
+                                <p className="text-primary-600 font-medium mb-3">Frontend Developer</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">Focuses on user interface design and client-side functionality.</p>
                             </div>
                         </div>
 
-                        {/* Team Member 3 - Mr. Megat */}
+                        {/* Team Member 3 - Mr. Najmi */}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 group hover:shadow-xl transition-shadow">
                             <div className="h-80 bg-gray-200 dark:bg-gray-700 overflow-hidden">
                                 <img
-                                    src="/images/team/mr-megat.png"
-                                    alt="Mr. Megat"
+                                    src="/images/team/mr-najmi.png"
+                                    alt="Mr. Najmi"
                                     className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                                 />
                             </div>
                             <div className="p-6 text-center">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Mr. Megat</h3>
-                                <p className="text-primary-600 font-medium mb-3">Operations Manager</p>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm">Ensuring smooth daily operations and logistics.</p>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Muhammad Najmi</h3>
+                                <p className="text-primary-600 font-medium mb-3">Backend Developer</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">Manages server-side logic and database architecture.</p>
                             </div>
                         </div>
 
@@ -118,9 +118,9 @@ const AboutPage = () => {
                                 />
                             </div>
                             <div className="p-6 text-center">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Mr. Faris</h3>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Faris Afizuan</h3>
                                 <p className="text-primary-600 font-medium mb-3">System Analyst</p>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm">Analyzing requirements and optimizing system performance.</p>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm">Analyzes system requirements to ensure efficient solutions.</p>
                             </div>
                         </div>
                     </div>
