@@ -53,7 +53,7 @@ JasHub is a parcel tracking and management system developed as part of a **IMS56
 ### 3. Database Setup:
 
 - The system uses **MongoDB Atlas** (cloud database). No local database setup is required.
-- Create a `.env` file inside the `backend/` folder **(IF .env file doesn't exist in the ZIP File)** with the following content:
+- Create a `.env` file inside the `backend/` folder **(IF .env file doesn't exist in the Backend Folder)** with the following content:
   ```
   ATLAS_URI=mongodb+srv://najmiii639:parcelsystem@parcelsystem.zg2j7it.mongodb.net/
   JWT_SECRET=parcelhub_jwt_secret_key_2025
