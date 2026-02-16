@@ -100,12 +100,12 @@ JasHub is a parcel tracking and management system developed as part of a **IMS56
 
 ## Contributors
 
-| Name | Role |
-|---|---|
-| Megat Naufal | Project Manager |
-| Amir Amsyar | Frontend Developer |
-| Muhammad Najmi | Backend Developer |
-| Faris Afizuan | System Analyst |
+| Name | Role | Phone Number |
+|---|---|---|
+| Megat Naufal | Project Manager | 011-6404 6283 |
+| Amir Amsyar | Frontend Developer | 014-699 3203 |
+| Muhammad Najmi | Backend Developer | 011-6211 7734 |
+| Faris Afizuan | System Analyst | 019-950 4432 |
 
 ## Acknowledgements
 
