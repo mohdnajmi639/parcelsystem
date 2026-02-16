@@ -58,6 +58,19 @@ JasHub is a parcel tracking and management system developed as part of a **IMS56
   ATLAS_URI=mongodb+srv://najmiii639:parcelsystem@parcelsystem.zg2j7it.mongodb.net/
   JWT_SECRET=parcelhub_jwt_secret_key_2025
   ```
+
+- **Connect to MongoDB Atlas:**
+  1. Open **MongoDB Compass** (download from [mongodb.com/products/compass](https://www.mongodb.com/products/compass) if not installed).
+  2. In the **New Connection** window, paste the following URI into the connection string field:
+     ```
+     mongodb+srv://najmiii639:parcelsystem@parcelsystem.zg2j7it.mongodb.net/
+     ```
+  3. Click **Connect** to view and manage the database collections.
+
+  > **Alternatively**, you can connect via the **MongoDB Atlas** web dashboard:
+  > 1. Go to [cloud.mongodb.com](https://cloud.mongodb.com/) and log in.
+  > 2. Navigate to **Database** > **Connect** > **Connect using MongoDB Compass**.
+  > 3. Copy the connection string and use it in MongoDB Compass as described above.
 ### 4. Run the App:
 
 - Start the backend server:
