@@ -50,7 +50,7 @@ const HomePage = () => {
                     return;
                 }
 
-                await axios.put(`http://localhost:5000/api/parcels/${trackingResult._id}`, {
+                await axios.put(`/api/parcels/${trackingResult._id}`, {
                     status: 'Collected',
                     collectedBy: userId // Link parcel to user
                 });
@@ -93,7 +93,7 @@ const HomePage = () => {
         setPaymentStatus('idle'); // Reset payment on new track
 
         try {
-            const response = await axios.get(`http://localhost:5000/api/parcels/track/${trackingNumber}`);
+            const response = await axios.get(`/api/parcels/track/${trackingNumber}`);
             setTrackingResult(response.data);
         } catch (err) {
             setError(err.response?.data?.error || 'Parcel not found or validation failed.');

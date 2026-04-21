@@ -37,7 +37,7 @@ const UserDashboard = () => {
 
         // Fetch parcel history using the dedicated, secure endpoint
         setHistoryLoading(true);
-        axios.get(`http://localhost:5000/api/users/${userId}/parcels`)
+        axios.get(`/api/users/${userId}/parcels`)
             .then(res => {
                 setParcelHistory(res.data);
             })
@@ -424,7 +424,7 @@ const SupportMessages = ({ email }) => {
     useEffect(() => {
         if (!email) return;
 
-        axios.get(`http://localhost:5000/api/messages/user/${email}`)
+        axios.get(`/api/messages/user/${email}`)
             .then(res => setMessages(res.data))
             .catch(err => console.error("Failed to fetch messages", err))
             .finally(() => setLoading(false));

@@ -44,7 +44,7 @@ const ContactPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/messages', formData);
+            await axios.post('/api/messages', formData);
             setStatus('success');
             // Keep name and email, just clear subject and message
             setFormData(prev => ({ ...prev, subject: '', message: '' }));

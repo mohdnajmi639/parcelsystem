@@ -46,15 +46,12 @@ const verifyToken = (req, res, next) => {
 };
 
 // INITIATE THE CONNECTION
-async function start() {
-    try {
-        await client.connect();
-        console.log("Connected to MongoDB Atlas");
+client.connect().then(() => console.log("Connected to MongoDB Atlas")).catch(err => console.error("MongoDB Connection Error:", err));
 
-        // SELECT DATABASE & COLLECTIONS
-        const db = client.db("parcelsystem");
-        const parcels = db.collection("parcels");
-        const users = db.collection("users");
+// SELECT DATABASE & COLLECTIONS
+const db = client.db("parcelsystem");
+const parcels = db.collection("parcels");
+const users = db.collection("users");
 
         // --- ROUTES ---
 
@@ -908,16 +905,11 @@ async function start() {
         });
 
         // START SERVER
-        const PORT = process.env.PORT || 5000;
-        app.listen(PORT, () => {
-            console.log(`Server is running on: http://localhost:${PORT}`);
-        });
+        if (process.env.NODE_ENV !== 'production') {
+            const PORT = process.env.PORT || 5000;
+            app.listen(PORT, () => {
+                console.log(`Server is running on: http://localhost:${PORT}`);
+            });
+        }
 
-    } catch (e) {
-        // Log connection errors (like wrong password in .env)
-        console.error("MongoDB Connection Error:", e);
-    }
-}
-
-// RUN THE START FUNCTION
-start();
+        module.exports = app;

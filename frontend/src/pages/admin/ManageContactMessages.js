@@ -22,7 +22,7 @@ const ManageContactMessages = () => {
 
     const fetchMessages = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/messages');
+            const response = await axios.get('/api/messages');
             setMessages(response.data);
             setLoading(false);
         } catch (error) {
@@ -34,7 +34,7 @@ const ManageContactMessages = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this message?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/messages/${id}`);
+                await axios.delete(`/api/messages/${id}`);
                 setMessages(messages.filter(msg => msg._id !== id));
             } catch (error) {
                 console.error('Error deleting message:', error);
@@ -47,7 +47,7 @@ const ManageContactMessages = () => {
         if (!replyMessage.trim()) return;
         setSendingReply(true);
         try {
-            await axios.put(`http://localhost:5000/api/messages/${selectedMessage._id}/reply`, {
+            await axios.put(`/api/messages/${selectedMessage._id}/reply`, {
                 replyMessage
             });
             showToastMessage('Reply sent successfully!', 'success');
