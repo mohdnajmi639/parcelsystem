@@ -4,7 +4,8 @@ const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 
@@ -16,18 +17,30 @@ app.use(express.json());
 const uri = process.env.ATLAS_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// Security check
+// Security check - do not exit process, just log error so we don't crash Vercel function
 if (!uri) {
-    console.error("CRITICAL ERROR: ATLAS_URI is not defined in your .env file!");
-    process.exit(1);
+    console.error("CRITICAL ERROR: ATLAS_URI is not defined!");
 }
 
 if (!JWT_SECRET) {
-    console.error("CRITICAL ERROR: JWT_SECRET is not defined in your .env file!");
-    process.exit(1);
+    console.error("CRITICAL ERROR: JWT_SECRET is not defined!");
 }
 
-const client = new MongoClient(uri);
+let client, db, parcels, users;
+
+try {
+    if (uri) {
+        client = new MongoClient(uri);
+        client.connect().then(() => console.log("Connected to MongoDB Atlas")).catch(err => console.error("MongoDB Connection Error:", err));
+        db = client.db("parcelsystem");
+        parcels = db.collection("parcels");
+        users = db.collection("users");
+    } else {
+        console.warn("MongoDB client not initialized due to missing ATLAS_URI");
+    }
+} catch (e) {
+    console.error("Error initializing MongoDB:", e);
+}
 
 // JWT Verification Middleware
 const verifyToken = (req, res, next) => {
@@ -44,14 +57,6 @@ const verifyToken = (req, res, next) => {
         return res.status(401).json({ error: 'Invalid or expired token.' });
     }
 };
-
-// INITIATE THE CONNECTION
-client.connect().then(() => console.log("Connected to MongoDB Atlas")).catch(err => console.error("MongoDB Connection Error:", err));
-
-// SELECT DATABASE & COLLECTIONS
-const db = client.db("parcelsystem");
-const parcels = db.collection("parcels");
-const users = db.collection("users");
 
         // --- ROUTES ---
 
